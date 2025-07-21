@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>الأقسام - منصة نور النبوة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/8576153/pexels-photo-8576153.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* كلاس للأنيميشن */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* لمعان عند التحويم */
+    .card-hover:hover {
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+      transform: scale(1.03);
+    }
+
+    /* انتقال ناعم */
+    .card-hover {
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* بانر المطور */
+    .dev-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: center;
+      padding: 0.75rem;
+      font-weight: bold;
+      font-size: 1rem;
+      z-index: 50;
+    }
+
+    .dev-banner a {
+      color: #00ffc8;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 pb-20"> <!-- pb-20 علشان يسيب مساحة للبنر -->
+
+  <h1 class="text-3xl font-bold text-center text-white mb-8 drop-shadow-lg">الأقسام التعليمية</h1>
+
+  <div id="sectionsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- سيتم إدراج البطاقات هنا -->
+  </div>
+
+  <div id="message" class="text-center mt-6 text-red-600 font-bold hidden"></div>
+
+  <!-- ✅ بانر المطور في أسفل الصفحة -->
+  <div class="dev-banner">
+    المطور: Muslim Tech _ مسلم تيك | 
+    <a href="https://wa.me/201108857529" target="_blank">واتساب: 01108857529</a>
+  </div>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec";
+    const sectionsContainer = document.getElementById("sectionsContainer");
+    const message = document.getElementById("message");
+
+    fetch(`${apiUrl}?action=getSections`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          message.textContent = "لا توجد أقسام متاحة حاليًا.";
+          message.classList.remove("hidden");
+          return;
+        }
+
+        data.forEach((section, index) => {
+          const card = document.createElement("div");
+          card.className = `
+            fade-in card-hover
+            bg-white/10 border border-white/30 
+            text-white p-6 rounded-xl 
+            backdrop-blur-md shadow-lg 
+            cursor-pointer
+          `;
+          card.style.animationDelay = `${index * 0.1}s`;
+
+          card.innerHTML = `
+            <h2 class="text-xl font-bold mb-2">${section["اسم القسم"]}</h2>
+            <p class="mb-4">${section["وصف القسم"]}</p>
+            <button class="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700">استعراض الأبواب</button>
+          `;
+          card.addEventListener("click", () => {
+            localStorage.setItem("sectionId", section["القسمID"]);
+            window.location.href = "topics.html";
+          });
+          sectionsContainer.appendChild(card);
+        });
+      })
+      .catch(error => {
+        message.textContent = "❌ حدث خطأ أثناء تحميل الأقسام.";
+        message.classList.remove("hidden");
+      });
+  </script>
+</body>
+</html> 

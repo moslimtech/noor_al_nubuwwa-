@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>الدورات - منصة نور النبوة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/8576153/pexels-photo-8576153.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dev-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: center;
+      padding: 0.75rem;
+      font-weight: bold;
+      font-size: 1rem;
+      z-index: 50;
+    }
+
+    .dev-banner a {
+      color: #00ffc8;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen p-6 pb-24">
+
+  <h1 class="text-3xl font-bold text-center text-white mb-6 drop-shadow-lg">الدورات المتاحة</h1>
+
+  <div id="coursesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+  <div id="message" class="text-center text-red-600 mt-4 hidden"></div>
+
+  <!-- ✅ بانر المطور -->
+  <div class="dev-banner">
+    المطور: Muslim Tech _ مسلم تيك | 
+    <a href="https://wa.me/201108857529" target="_blank">واتساب: 01108857529</a>
+  </div>
+
+  <!-- ✅ طرق الدفع -->
+  <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg max-w-md w-full">
+      <h2 class="text-xl font-bold mb-4">طرق الدفع</h2>
+      <ul id="paymentMethods" class="list-disc pl-5 space-y-2 text-gray-700"></ul>
+      <div class="text-right mt-4 flex justify-between items-center">
+        <button onclick="closeModal()" class="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700">إغلاق</button>
+        <button id="confirmBtn" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">تأكيد الاشتراك</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec";
+    const topicId = localStorage.getItem("topicId");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const message = document.getElementById("message");
+    const coursesContainer = document.getElementById("coursesContainer");
+    const modal = document.getElementById("paymentModal");
+    const paymentList = document.getElementById("paymentMethods");
+    const confirmBtn = document.getElementById("confirmBtn");
+
+    let selectedCourseId = null;
+    let selectedDuration = null;
+
+    if (!user || !topicId) {
+      message.textContent = "❌ لم يتم تحديد الباب أو تسجيل الدخول.";
+      message.classList.remove("hidden");
+    } else {
+      fetch(`${apiUrl}?action=getCoursesByTopic&topicId=${topicId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            message.textContent = "🚫 لا توجد دورات متاحة لهذا الباب.";
+            message.classList.remove("hidden");
+            return;
+          }
+
+          data.forEach((course, index) => {
+            const card = document.createElement("div");
+            card.className = "glass-card fade-in";
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.innerHTML = `
+              <h2 class="text-xl font-bold mb-1">${course["اسم الدورة"]}</h2>
+              <p class="mb-2">${course["وصف الدورة"]}</p>
+              <p class="text-green-300 font-medium">💵 السعر: ${course["سعر الدورة"]} جنيه</p>
+              <p class="text-purple-300 font-medium">⏱️ المدة: ${course["المدة باليوم"]} يوم</p>
+              <div class="mt-4 flex gap-2 flex-wrap">
+                <button class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700" onclick="showPayment('${course["الدورةID"]}', '${course["المدة باليوم"]}')">اشترك الآن</button>
+                <button class="bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700" onclick="goToLectures('${course["الدورةID"]}')">شاهد المحتوى</button>
+              </div>
+            `;
+            coursesContainer.appendChild(card);
+          });
+        })
+        .catch(() => {
+          message.textContent = "❌ فشل تحميل الدورات.";
+          message.classList.remove("hidden");
+        });
+    }
+
+    function showPayment(courseId, duration) {
+      selectedCourseId = courseId;
+      selectedDuration = duration;
+
+      fetch(`${apiUrl}?action=getPaymentMethods`)
+        .then(res => res.json())
+        .then(methods => {
+          paymentList.innerHTML = "";
+          methods.forEach(method => {
+            const li = document.createElement("li");
+            li.textContent = `${method["الطريقة"] || "طريقة غير معروفة"}: ${method["الوصف"] || ""}`;
+            paymentList.appendChild(li);
+          });
+          modal.classList.remove("hidden");
+        });
+    }
+
+    confirmBtn.addEventListener("click", () => {
+      if (!user || !user["البريد الإلكتروني"]) {
+        alert("❌ لم يتم العثور على بيانات تسجيل الدخول.");
+        return;
+      }
+
+      fetch(apiUrl, {
+        method: "POST",
+        body: new URLSearchParams({
+          action: "enrollRegularCourse",
+          email: user["البريد الإلكتروني"],
+          courseId: selectedCourseId,
+          duration: selectedDuration
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ " + data.message);
+        closeModal();
+      })
+      .catch(() => {
+        alert("❌ حدث خطأ أثناء إرسال الاشتراك.");
+      });
+    });
+
+    function goToLectures(courseId) {
+      fetch(`${apiUrl}?action=getLecturesByCourse&courseId=${courseId}&email=${user["البريد الإلكتروني"]}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "error") {
+            alert(data.message);
+          } else {
+            localStorage.setItem("courseId", courseId);
+            window.location.href = "lectures.html";
+          }
+        });
+    }
+
+    function closeModal() {
+      modal.classList.add("hidden");
+    }
+  </script>
+</body>
+</html> 

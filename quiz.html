@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الأسئلة - منصة نور النبوة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/8576153/pexels-photo-8576153.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dev-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: center;
+      padding: 0.75rem;
+      font-weight: bold;
+      font-size: 1rem;
+      z-index: 50;
+    }
+
+    .dev-banner a {
+      color: #00ffc8;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24 p-4">
+
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-white mb-8 drop-shadow-lg">الأسئلة الخاصة بالفيديو</h1>
+    <div id="quizContainer" class="space-y-6"></div>
+    <div class="text-center mt-8">
+      <button id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg text-lg transition">إرسال الإجابات</button>
+    </div>
+    <div id="resultMessage" class="text-center text-xl font-bold text-green-300 mt-6 hidden"></div>
+  </div>
+
+  <div class="dev-banner">
+    المطور: Muslim Tech _ مسلم تيك | 
+    <a href="https://wa.me/201108857529" target="_blank">واتساب: 01108857529</a>
+  </div>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec";
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get("courseId");
+    const lectureId = urlParams.get("lectureId");
+    const videoId = urlParams.get("videoId");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const quizContainer = document.getElementById("quizContainer");
+    const resultMessage = document.getElementById("resultMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+    if (!courseId || !lectureId || !videoId || !user) {
+      quizContainer.innerHTML = '<p class="text-red-600 text-center">❌ حدث خطأ في تحميل الأسئلة.</p>';
+      submitBtn.style.display = 'none';
+    } else {
+      fetch(`${apiUrl}?action=getQuizByVideo&videoId=${videoId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!Array.isArray(data) || data.length === 0) {
+            quizContainer.innerHTML = '<p class="text-red-600 text-center">🚫 لا توجد أسئلة متاحة لهذا الفيديو.</p>';
+            submitBtn.style.display = 'none';
+            return;
+          }
+
+          data.forEach((q, index) => {
+            const div = document.createElement("div");
+            div.className = "glass-card fade-in";
+            div.style.animationDelay = `${index * 0.1}s`;
+
+            div.innerHTML = `
+              <h2 class="text-lg font-semibold mb-4">${index + 1}. ${q["نص السؤال"]}</h2>
+              <div class="space-y-2">
+                ${["الاختيار1", "الاختيار2", "الاختيار3", "الاختيار4"].map(choiceKey => `
+                  <label class="block bg-white bg-opacity-10 px-4 py-2 rounded cursor-pointer hover:bg-opacity-20 transition">
+                    <input type="radio" name="q${index}" value="${q[choiceKey]}" class="mr-2">
+                    ${q[choiceKey]}
+                  </label>
+                `).join('')}
+              </div>
+            `;
+            quizContainer.appendChild(div);
+          });
+
+          submitBtn.addEventListener("click", () => {
+            const answers = [];
+            let allAnswered = true;
+
+            data.forEach((q, index) => {
+              const selected = document.querySelector(`input[name=q${index}]:checked`);
+              if (!selected) allAnswered = false;
+              answers.push({
+                question: q["نص السؤال"],
+                answer: selected ? selected.value : "",
+                correct: q["الإجابة الصحيحة"]
+              });
+            });
+
+            if (!allAnswered) {
+              alert("من فضلك أجب على جميع الأسئلة.");
+              return;
+            }
+
+            const correctCount = answers.filter(a => a.answer === a.correct).length;
+            const result = `${correctCount} / ${answers.length}`;
+
+            fetch(apiUrl, {
+              method: "POST",
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({
+                action: "submitQuiz",
+                email: user["البريد الإلكتروني"],
+                courseId,
+                lectureId,
+                videoId,
+                answers: JSON.stringify(answers),
+                result
+              })
+            })
+            .then(() => {
+              resultMessage.textContent = `✅ تم إرسال إجاباتك بنجاح! نتيجتك: ${result}`;
+              resultMessage.classList.remove("hidden");
+              submitBtn.disabled = true;
+              submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+            });
+          });
+        })
+        .catch(() => {
+          quizContainer.innerHTML = '<p class="text-red-600 text-center">❌ حدث خطأ أثناء تحميل الأسئلة.</p>';
+          submitBtn.style.display = 'none';
+        });
+    }
+  </script>
+</body>
+</html> 

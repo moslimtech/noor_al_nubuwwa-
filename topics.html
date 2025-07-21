@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>الأبواب - منصة نور النبوة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/8576153/pexels-photo-8576153.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .card-hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card-hover:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .dev-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: center;
+      padding: 0.8rem;
+      font-weight: bold;
+      z-index: 50;
+    }
+
+    .dev-banner a {
+      color: #00ffcc;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 pb-20"> <!-- pb-20 علشان يسيب مساحة للبنر -->
+
+  <h1 class="text-3xl font-bold text-center text-white mb-8 drop-shadow-lg">الأبواب التعليمية</h1>
+
+  <div id="topicsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- سيتم إدراج البطاقات هنا -->
+  </div>
+
+  <div id="message" class="text-center mt-6 text-red-500 font-bold hidden"></div>
+
+  <!-- البنر الثابت -->
+  <div class="dev-banner">
+    المطور: Muslim Tech _ مسلم تيك | 
+    <a href="https://wa.me/201108857529" target="_blank">واتساب: 01108857529</a>
+  </div>
+
+  <script>
+    const sectionId = localStorage.getItem("sectionId");
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec";
+    const topicsContainer = document.getElementById("topicsContainer");
+    const message = document.getElementById("message");
+
+    if (!sectionId) {
+      message.textContent = "❌ لم يتم تحديد القسم.";
+      message.classList.remove("hidden");
+    } else {
+      fetch(`${apiUrl}?action=getTopicsBySection&sectionId=${sectionId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            message.textContent = "🚫 لا توجد أبواب تابعة لهذا القسم.";
+            message.classList.remove("hidden");
+            return;
+          }
+
+          data.forEach(topic => {
+            const card = document.createElement("div");
+            card.className = "card-hover p-6 rounded-xl shadow cursor-pointer";
+            card.innerHTML = `
+              <h2 class="text-xl font-bold mb-2">${topic["اسم الباب"]}</h2>
+              <p class="mb-4">${topic["وصف الباب"]}</p>
+              <button class="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700">استعراض الدورات</button>
+            `;
+            card.addEventListener("click", () => {
+              localStorage.setItem("topicId", topic["البابID"]);
+              window.location.href = "courses.html";
+            });
+            topicsContainer.appendChild(card);
+          });
+        })
+        .catch(error => {
+          message.textContent = "❌ حدث خطأ أثناء تحميل الأبواب.";
+          message.classList.remove("hidden");
+        });
+    }
+  </script>
+</body>
+</html> 

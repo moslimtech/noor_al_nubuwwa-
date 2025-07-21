@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>جدول البث للدورات التفاعلية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/10206732/pexels-photo-10206732.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+    }
+    .card {
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between px-4 py-6 text-gray-800">
+
+  <h1 class="text-3xl font-bold text-center mb-6 text-white bg-black bg-opacity-50 py-4 rounded">
+    جدول البث للدورات التفاعلية
+  </h1>
+
+  <div id="scheduleContainer" class="space-y-4"></div>
+
+  <footer class="bg-black bg-opacity-70 text-white text-center py-4 mt-8">
+    المطور: <strong>Muslim Tech _ مسلم تيك</strong> |
+    <a href="https://wa.me/201108857529" target="_blank" class="underline text-green-400">
+      واتساب: 0 110 885 7529
+    </a>
+  </footer>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get("courseId");
+    const email = localStorage.getItem("email");
+
+    async function fetchSchedule() {
+      if (!email || !courseId) {
+        document.getElementById("scheduleContainer").innerHTML = `
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">
+            ❗ البيانات غير مكتملة أو لم تقم بتسجيل الدخول.
+          </div>
+        `;
+        return;
+      }
+
+      const res = await fetch(`https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec?action=getLiveSchedule&email=${email}&courseId=${courseId}`);
+      const data = await res.json();
+
+      if (data.status === "error") {
+        document.getElementById("scheduleContainer").innerHTML = `
+          <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded text-center">
+            ${data.message}
+          </div>
+        `;
+        return;
+      }
+
+      const container = document.getElementById("scheduleContainer");
+      container.innerHTML = "";
+
+      data.forEach((item, i) => {
+        const card = document.createElement("div");
+        card.className = "card p-4 rounded shadow text-right";
+
+        card.innerHTML = `
+          <h2 class="text-xl font-semibold text-blue-700 mb-2">اليوم: ${item["اليوم"]}</h2>
+          <p>🕒 الوقت: ${item["الوقت"]}</p>
+          <p>🔗 الرابط: <a href="${item["الرابط"]}" target="_blank" class="text-blue-600 underline">اضغط هنا</a></p>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    fetchSchedule();
+  </script>
+</body>
+</html> 
