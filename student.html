@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>صفحة الطالب</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #global-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.85);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s;
+    }
+    #global-loader .spinner {
+      border: 6px solid #eee;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.55); /* تقليل العتامة */
+      border-radius: 1rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+    .student-header {
+      background: rgba(59,130,246,0.08); /* أقل عتامة */
+      border-radius: 1rem 1rem 0 0;
+      padding: 1.5rem 1rem 1rem 1rem;
+      text-align: center;
+    }
+    .student-header h2 {
+      color: #2563eb;
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .student-header p {
+      color: #374151;
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+    .course-card {
+      background: rgba(255,255,255,0.38); /* شفافية أعلى */
+      border-radius: 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      border: 1px solid rgba(59,130,246,0.10);
+      padding: 1.2rem 1rem;
+      margin-bottom: 1.2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .course-card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(59,130,246,0.18);
+    }
+    #studentInfo > div {
+      background: rgba(255,255,255,0.32) !important;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.08);
+    }
+    body {
+      background-image: url('https://images.pexels.com/photos/30582372/pexels-photo-30582372.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-right px-4 py-6">
+  <div id="global-loader">
+    <div class="spinner"></div>
+  </div>
+  <div class="max-w-4xl mx-auto glass-card p-0 shadow-lg">
+    <div class="student-header">
+      <h2>👨‍🎓 صفحة الطالب</h2>
+      <div id="studentInfo" class="flex flex-wrap justify-center gap-6 mt-4"></div>
+    </div>
+    <div class="p-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-700">📚 الدورات المسجلة:</h3>
+      <div id="coursesContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    const email = localStorage.getItem("email");
+    if (!email) {
+      alert("يرجى تسجيل الدخول أولًا");
+      window.location.href = "login.html";
+    }
+
+    async function fetchData(action, params = {}) {
+      const url = new URL("https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec");
+      url.searchParams.append("action", action);
+      Object.entries(params).forEach(([key, val]) => url.searchParams.append(key, val));
+      const res = await fetch(url);
+      return await res.json();
+    }
+
+    async function loadStudentPage() {
+      // بيانات الطالب
+      const students = await fetchData("getStudents");
+      const student = students.find(s => s["البريد الإلكتروني"] === email);
+      if (!student) return alert("لا يوجد بيانات لهذا الطالب");
+      document.getElementById("studentInfo").innerHTML = `
+        <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
+          <span class="text-blue-700 text-2xl mb-1">👤</span>
+          <div class="text-gray-700 font-semibold">${student["الاسم الكامل"]}</div>
+          <div class="text-xs text-gray-500 mt-1">الاسم</div>
+        </div>
+        <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
+          <span class="text-blue-700 text-2xl mb-1">📧</span>
+          <div class="text-gray-700 font-semibold">${student["البريد الإلكتروني"]}</div>
+          <div class="text-xs text-gray-500 mt-1">البريد</div>
+        </div>
+        <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
+          <span class="text-blue-700 text-2xl mb-1">🏫</span>
+          <div class="text-gray-700 font-semibold">${student["المرحلة الدراسية"]}</div>
+          <div class="text-xs text-gray-500 mt-1">المرحلة الدراسية</div>
+        </div>
+        <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
+          <span class="text-blue-700 text-2xl mb-1">📅</span>
+          <div class="text-gray-700 font-semibold">${student["تاريخ التسجيل"]?.split('T')[0] || ''}</div>
+          <div class="text-xs text-gray-500 mt-1">تاريخ التسجيل</div>
+        </div>
+      `;
+
+      // الاشتراكات العادية
+      const subscriptions = await fetchData("getRegularSubscriptions", { email });
+      // الاشتراكات التفاعلية
+      const liveSubs = await fetchData("getLiveSubscriptions", { email });
+      const allCourses = await fetchData("getCoursesByTopic", { topicId: "" });
+      const liveCourses = await fetchData("getLiveCourses");
+      const courseMap = {};
+      [...allCourses, ...liveCourses].forEach(c => courseMap[c["الدورةID"] || c["الدورة التفاعليةID"]] = c["اسم الدورة"]);
+      const progressData = await fetchData("getProgress", { email });
+      let html = '';
+      function renderCourseBlock(sub, isLive = false) {
+        const idField = isLive ? "الدورة التفاعليةID" : "الدورةID";
+        const name = courseMap[sub[idField]] || "دورة غير معروفة";
+        const status = sub["حالة التفعيل"];
+        const start = sub["تاريخ بداية التفعيل"];
+        const end = sub["تاريخ نهاية التفعيل"];
+        const done = progressData.completed?.length || 0;
+        return `
+          <div class="course-card">
+            <p><strong>الدورة:</strong> ${name}</p>
+            <p><strong>الحالة:</strong> ${status}</p>
+            <p><strong>من:</strong> ${start || "—"} <strong>إلى:</strong> ${end || "—"}</p>
+            <p><strong>التقدم:</strong> ${done} فيديو مكتمل</p>
+          </div>
+        `;
+      }
+      subscriptions.forEach(sub => html += renderCourseBlock(sub, false));
+      liveSubs.forEach(sub => html += renderCourseBlock(sub, true));
+      document.getElementById("coursesContainer").innerHTML = html || "<p>لا يوجد اشتراكات بعد.</p>";
+    }
+    loadStudentPage();
+  </script>
+  <script>
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 400);
+        }, 2000);
+      }
+    });
+  </script>
+</body>
+</html> 

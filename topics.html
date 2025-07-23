@@ -69,6 +69,13 @@
     if (!sectionId) {
       message.textContent = "❌ لم يتم تحديد القسم.";
       message.classList.remove("hidden");
+      setTimeout(() => {
+        const loader = document.getElementById('global-loader');
+        if(loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 400);
+        }
+      }, 4000);
     } else {
       fetch(`${apiUrl}?action=getTopicsBySection&sectionId=${sectionId}`)
         .then(res => res.json())
@@ -76,6 +83,13 @@
           if (!data || data.length === 0) {
             message.textContent = "🚫 لا توجد أبواب تابعة لهذا القسم.";
             message.classList.remove("hidden");
+            setTimeout(() => {
+              const loader = document.getElementById('global-loader');
+              if(loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+              }
+            }, 4000);
             return;
           }
 
@@ -93,10 +107,24 @@
             });
             topicsContainer.appendChild(card);
           });
+          setTimeout(() => {
+            const loader = document.getElementById('global-loader');
+            if(loader) {
+              loader.style.opacity = '0';
+              setTimeout(() => loader.style.display = 'none', 400);
+            }
+          }, 4000);
         })
         .catch(error => {
           message.textContent = "❌ حدث خطأ أثناء تحميل الأبواب.";
           message.classList.remove("hidden");
+          setTimeout(() => {
+            const loader = document.getElementById('global-loader');
+            if(loader) {
+              loader.style.opacity = '0';
+              setTimeout(() => loader.style.display = 'none', 400);
+            }
+          }, 4000);
         });
     }
   </script>
