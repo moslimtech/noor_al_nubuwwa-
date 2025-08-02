@@ -130,6 +130,12 @@
     if (!user || !topicId) {
       message.textContent = "❌ لم يتم تحديد الباب أو تسجيل الدخول.";
       message.classList.remove("hidden");
+      // إخفاء اللودنج فوراً في حالة الخطأ
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
+      }
     } else {
       fetch(`${apiUrl}?action=getCoursesByTopic&topicId=${topicId}`)
         .then(res => res.json())
@@ -137,6 +143,12 @@
           if (!data || data.length === 0) {
             message.textContent = "🚫 لا توجد دورات متاحة لهذا الباب.";
             message.classList.remove("hidden");
+            // إخفاء اللودنج فوراً
+            const loader = document.getElementById('global-loader');
+            if(loader) {
+              loader.style.opacity = '0';
+              setTimeout(() => loader.style.display = 'none', 400);
+            }
             return;
           }
 
@@ -156,10 +168,23 @@
             `;
             coursesContainer.appendChild(card);
           });
+          
+          // إخفاء اللودنج بعد تحميل البيانات بنجاح
+          const loader = document.getElementById('global-loader');
+          if(loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 400);
+          }
         })
         .catch(() => {
           message.textContent = "❌ فشل تحميل الدورات.";
           message.classList.remove("hidden");
+          // إخفاء اللودنج في حالة الخطأ
+          const loader = document.getElementById('global-loader');
+          if(loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 400);
+          }
         });
     }
 
@@ -221,16 +246,6 @@
     function closeModal() {
       modal.classList.add("hidden");
     }
-
-    window.addEventListener('load', function() {
-      const loader = document.getElementById('global-loader');
-      if(loader) {
-        setTimeout(() => {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 400);
-        }, 2000); // 2 ثانية
-      }
-    });
   </script>
 </body>
 </html> 

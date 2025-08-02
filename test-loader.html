@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>اختبار اللودنج - منصة نور النبوة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/8576153/pexels-photo-8576153.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dev-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: center;
+      padding: 0.75rem;
+      font-weight: bold;
+      font-size: 1rem;
+      z-index: 50;
+    }
+
+    .dev-banner a {
+      color: #00ffc8;
+      text-decoration: underline;
+    }
+    
+    #global-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.85);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s;
+    }
+    #global-loader .spinner {
+      border: 6px solid #eee;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen p-6 pb-24">
+
+  <div id="global-loader">
+    <div class="spinner"></div>
+  </div>
+
+  <h1 class="text-3xl font-bold text-center text-white mb-6 drop-shadow-lg">🧪 اختبار اللودنج</h1>
+
+  <div class="max-w-4xl mx-auto">
+    <div class="glass-card fade-in mb-6">
+      <h2 class="text-xl font-bold mb-4">📋 قائمة اختبار اللودنج</h2>
+      <p class="mb-4">هذه الصفحة لاختبار نظام اللودنج في جميع صفحات المنصة:</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-blue-600/20 p-4 rounded-lg">
+          <h3 class="font-bold mb-2">🔗 الصفحات الثابتة (لودنج فوري)</h3>
+          <ul class="text-sm space-y-1">
+            <li>• <a href="index.html" class="text-blue-300 hover:underline">صفحة البداية</a></li>
+            <li>• <a href="home.html" class="text-blue-300 hover:underline">الصفحة الرئيسية</a></li>
+            <li>• <a href="login.html" class="text-blue-300 hover:underline">تسجيل الدخول</a></li>
+            <li>• <a href="signup.html" class="text-blue-300 hover:underline">إنشاء حساب</a></li>
+          </ul>
+        </div>
+        
+        <div class="bg-green-600/20 p-4 rounded-lg">
+          <h3 class="font-bold mb-2">📊 الصفحات الديناميكية (لودنج فعلي)</h3>
+          <ul class="text-sm space-y-1">
+            <li>• <a href="sections.html" class="text-green-300 hover:underline">الأقسام</a></li>
+            <li>• <a href="topics.html" class="text-green-300 hover:underline">الأبواب</a></li>
+            <li>• <a href="courses.html" class="text-green-300 hover:underline">الدورات</a></li>
+            <li>• <a href="lectures.html" class="text-green-300 hover:underline">المحاضرات</a></li>
+            <li>• <a href="videos.html" class="text-green-300 hover:underline">الفيديوهات</a></li>
+            <li>• <a href="quiz.html" class="text-green-300 hover:underline">الأسئلة</a></li>
+            <li>• <a href="student.html" class="text-green-300 hover:underline">صفحة الطالب</a></li>
+            <li>• <a href="live-courses.html" class="text-green-300 hover:underline">الدورات التفاعلية</a></li>
+            <li>• <a href="live-schedule.html" class="text-green-300 hover:underline">جدول البث</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card fade-in" style="animation-delay: 0.2s;">
+      <h2 class="text-xl font-bold mb-4">⚡ اختبار اللودنج الفوري</h2>
+      <p class="mb-4">هذا اللودنج يختفي فوراً بعد تحميل الصفحة:</p>
+      <div class="text-center">
+        <button id="testLoaderBtn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg text-lg transition">
+          🧪 اختبار اللودنج الفوري
+        </button>
+      </div>
+    </div>
+
+    <div class="glass-card fade-in" style="animation-delay: 0.4s;">
+      <h2 class="text-xl font-bold mb-4">⏱️ اختبار اللودنج المؤقت</h2>
+      <p class="mb-4">هذا اللودنج يختفي بعد 3 ثواني (محاكاة تحميل البيانات):</p>
+      <div class="text-center">
+        <button id="testTimedLoaderBtn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg text-lg transition">
+          ⏱️ اختبار اللودنج المؤقت
+        </button>
+      </div>
+    </div>
+
+    <div class="glass-card fade-in" style="animation-delay: 0.6s;">
+      <h2 class="text-xl font-bold mb-4">📊 حالة اللودنج</h2>
+      <div id="loaderStatus" class="text-center p-4 bg-gray-800/50 rounded-lg">
+        <p class="text-green-400">✅ اللودنج جاهز للاختبار</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ بانر المطور -->
+  <div class="dev-banner">
+    المطور: Muslim Tech _ مسلم تيك | 
+    <a href="https://wa.me/201108857529" target="_blank">واتساب: 01108857529</a>
+  </div>
+
+  <script>
+    // إخفاء اللودنج فوراً بعد تحميل الصفحة
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
+      }
+    });
+
+    // اختبار اللودنج الفوري
+    document.getElementById('testLoaderBtn').addEventListener('click', function() {
+      const loader = document.getElementById('global-loader');
+      const status = document.getElementById('loaderStatus');
+      
+      if(loader) {
+        // إظهار اللودنج
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+        status.innerHTML = '<p class="text-yellow-400">⏳ اللودنج يعمل...</p>';
+        
+        // إخفاء اللودنج فوراً
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          setTimeout(() => {
+            loader.style.display = 'none';
+            status.innerHTML = '<p class="text-green-400">✅ اللودنج الفوري يعمل بشكل صحيح</p>';
+          }, 400);
+        }, 1000);
+      }
+    });
+
+    // اختبار اللودنج المؤقت
+    document.getElementById('testTimedLoaderBtn').addEventListener('click', function() {
+      const loader = document.getElementById('global-loader');
+      const status = document.getElementById('loaderStatus');
+      
+      if(loader) {
+        // إظهار اللودنج
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+        status.innerHTML = '<p class="text-yellow-400">⏳ اللودنج يعمل لمدة 3 ثواني...</p>';
+        
+        // إخفاء اللودنج بعد 3 ثواني
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          setTimeout(() => {
+            loader.style.display = 'none';
+            status.innerHTML = '<p class="text-green-400">✅ اللودنج المؤقت يعمل بشكل صحيح</p>';
+          }, 400);
+        }, 3000);
+      }
+    });
+
+    // اختبار اللودنج عند تحميل الصفحة
+    window.addEventListener('load', function() {
+      const status = document.getElementById('loaderStatus');
+      setTimeout(() => {
+        status.innerHTML = '<p class="text-green-400">✅ اللودنج يعمل بشكل صحيح في هذه الصفحة</p>';
+      }, 500);
+    });
+  </script>
+</body>
+</html> 

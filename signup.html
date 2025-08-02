@@ -118,10 +118,9 @@
     window.addEventListener('load', function() {
       const loader = document.getElementById('global-loader');
       if(loader) {
-        setTimeout(() => {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 400);
-        }, 2000); // 2 ثانية
+        // إخفاء اللودنج فوراً بعد تحميل الصفحة
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
       }
     });
   </script>

@@ -15,9 +15,35 @@
     .card {
       background-color: rgba(255, 255, 255, 0.95);
     }
+    
+    #global-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.85);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s;
+    }
+    #global-loader .spinner {
+      border: 6px solid #eee;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between px-4 py-6 text-gray-800">
+
+  <div id="global-loader">
+    <div class="spinner"></div>
+  </div>
 
   <h1 class="text-3xl font-bold text-center mb-6 text-white bg-black bg-opacity-50 py-4 rounded">
     جدول البث للدورات التفاعلية
@@ -38,42 +64,71 @@
     const email = localStorage.getItem("email");
 
     async function fetchSchedule() {
-      if (!email || !courseId) {
-        document.getElementById("scheduleContainer").innerHTML = `
-          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">
-            ❗ البيانات غير مكتملة أو لم تقم بتسجيل الدخول.
-          </div>
-        `;
-        return;
+      try {
+        if (!email || !courseId) {
+          document.getElementById("scheduleContainer").innerHTML = `
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">
+              ❗ البيانات غير مكتملة أو لم تقم بتسجيل الدخول.
+            </div>
+          `;
+          // إخفاء اللودنج فوراً في حالة الخطأ
+          const loader = document.getElementById('global-loader');
+          if(loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 400);
+          }
+          return;
+        }
+
+        const res = await fetch(`https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec?action=getLiveSchedule&email=${email}&courseId=${courseId}`);
+        const data = await res.json();
+
+        if (data.status === "error") {
+          document.getElementById("scheduleContainer").innerHTML = `
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded text-center">
+              ${data.message}
+            </div>
+          `;
+          // إخفاء اللودنج فوراً
+          const loader = document.getElementById('global-loader');
+          if(loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 400);
+          }
+          return;
+        }
+
+        const container = document.getElementById("scheduleContainer");
+        container.innerHTML = "";
+
+        data.forEach((item, i) => {
+          const card = document.createElement("div");
+          card.className = "card p-4 rounded shadow text-right";
+
+          card.innerHTML = `
+            <h2 class="text-xl font-semibold text-blue-700 mb-2">اليوم: ${item["اليوم"]}</h2>
+            <p>🕒 الوقت: ${item["الوقت"]}</p>
+            <p>🔗 الرابط: <a href="${item["الرابط"]}" target="_blank" class="text-blue-600 underline">اضغط هنا</a></p>
+          `;
+
+          container.appendChild(card);
+        });
+        
+        // إخفاء اللودنج بعد تحميل البيانات بنجاح
+        const loader = document.getElementById('global-loader');
+        if(loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 400);
+        }
+      } catch (error) {
+        console.error("خطأ في تحميل جدول البث:", error);
+        // إخفاء اللودنج في حالة الخطأ
+        const loader = document.getElementById('global-loader');
+        if(loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 400);
+        }
       }
-
-      const res = await fetch(`https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec?action=getLiveSchedule&email=${email}&courseId=${courseId}`);
-      const data = await res.json();
-
-      if (data.status === "error") {
-        document.getElementById("scheduleContainer").innerHTML = `
-          <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded text-center">
-            ${data.message}
-          </div>
-        `;
-        return;
-      }
-
-      const container = document.getElementById("scheduleContainer");
-      container.innerHTML = "";
-
-      data.forEach((item, i) => {
-        const card = document.createElement("div");
-        card.className = "card p-4 rounded shadow text-right";
-
-        card.innerHTML = `
-          <h2 class="text-xl font-semibold text-blue-700 mb-2">اليوم: ${item["اليوم"]}</h2>
-          <p>🕒 الوقت: ${item["الوقت"]}</p>
-          <p>🔗 الرابط: <a href="${item["الرابط"]}" target="_blank" class="text-blue-600 underline">اضغط هنا</a></p>
-        `;
-
-        container.appendChild(card);
-      });
     }
 
     fetchSchedule();
