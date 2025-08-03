@@ -51,9 +51,27 @@
       <input type="text" name="fullname" placeholder="الاسم الكامل" required class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
       <input type="email" name="email" placeholder="البريد الإلكتروني" required class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
       <input type="text" name="studentId" placeholder="رقم الطالب" required class="w-full px-4 py-2 border rounded"/>
-      <input type="text" name="parentPhone" placeholder="رقم ولي الأمر" required class="w-full px-4 py-2 border rounded"/>
+      
+      <!-- النوع -->
+      <select name="gender" required class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">اختر النوع</option>
+        <option value="ذكر">ذكر</option>
+        <option value="أنثى">أنثى</option>
+        <option value="مخصص">مخصص</option>
+      </select>
+      
+      <!-- المرحلة الدراسية -->
+      <select name="grade" required class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">اختر المرحلة الدراسية</option>
+        <option value="ابتدائي">ابتدائي</option>
+        <option value="إعدادي">إعدادي</option>
+        <option value="ثانوي">ثانوي</option>
+        <option value="جامعي">جامعي</option>
+        <option value="خريج">خريج</option>
+      </select>
+      
       <input type="text" name="city" placeholder="المدينة" class="w-full px-4 py-2 border rounded"/>
-      <input type="text" name="grade" placeholder="المرحلة الدراسية" class="w-full px-4 py-2 border rounded"/>
+      <input type="text" name="parentPhone" placeholder="رقم ولي الأمر (اختياري)" class="w-full px-4 py-2 border rounded"/>
       <input type="password" name="password" placeholder="كلمة المرور" required class="w-full px-4 py-2 border rounded"/>
 
       <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800 transition">🎉 إنشاء الحساب</button>
@@ -88,9 +106,10 @@
         "الاسم الكامل": formData.get("fullname"),
         "البريد الإلكتروني": formData.get("email"),
         "رقم الطالب": formData.get("studentId"),
-        "رقم ولي الأمر": formData.get("parentPhone"),
-        "المدينة": formData.get("city"),
+        "النوع": formData.get("gender"),
         "المرحلة الدراسية": formData.get("grade"),
+        "المدينة": formData.get("city"),
+        "رقم ولي الأمر": formData.get("parentPhone") || "",
         "كلمة المرور": formData.get("password")
       });
 
