@@ -60,6 +60,7 @@
       color: #00ffc8;
       text-decoration: underline;
     }
+
     #global-loader {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -70,6 +71,7 @@
       justify-content: center;
       transition: opacity 0.4s;
     }
+
     #global-loader .spinner {
       border: 6px solid #eee;
       border-top: 6px solid #3498db;
@@ -78,6 +80,7 @@
       height: 60px;
       animation: spin 1s linear infinite;
     }
+
     @keyframes spin {
       100% { transform: rotate(360deg); }
     }
@@ -198,7 +201,13 @@
           paymentList.innerHTML = "";
           methods.forEach(method => {
             const li = document.createElement("li");
-            li.textContent = `${method["الطريقة"] || "طريقة غير معروفة"}: ${method["الوصف"] || ""}`;
+            li.classList.add("text-gray-700", "font-medium");
+            li.innerHTML = `
+              <strong>${method["طريقة الدفع"] || "طريقة غير معروفة"}:</strong> 
+              ${method["الوصف"] || ""} 
+              <br />
+              <a href="${method["الرابط"] || "#"}" target="_blank" class="text-blue-500 underline">${method["الرابط"] || "الرابط غير متاح"}</a>
+            `;
             paymentList.appendChild(li);
           });
           modal.classList.remove("hidden");
@@ -248,4 +257,4 @@
     }
   </script>
 </body>
-</html> 
+</html>
