@@ -240,17 +240,17 @@
     });
 
     function goToLectures(courseId) {
-      fetch(`${apiUrl}?action=getLecturesByCourse&courseId=${courseId}&email=${user["البريد الإلكتروني"]}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === "error") {
-            alert(data.message);
-          } else {
-            localStorage.setItem("courseId", courseId);
-            window.location.href = "lectures.html";
-          }
-        });
-    }
+  fetch(`${apiUrl}?action=getLecturesByCourse&courseId=${courseId}&studentId=${user["الطالبID"]}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "error") {
+        alert(data.message);
+      } else {
+        localStorage.setItem("courseId", courseId);
+        window.location.href = "lectures.html";
+      }
+    });
+}
 
     function closeModal() {
       modal.classList.add("hidden");
@@ -258,3 +258,4 @@
   </script>
 </body>
 </html>
+
