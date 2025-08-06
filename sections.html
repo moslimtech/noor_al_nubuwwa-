@@ -13,6 +13,39 @@
       background-repeat: no-repeat;
     }
 
+    /* لودنج الشاشة */
+    #global-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.95);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    #global-loader .spinner {
+      border: 6px solid #e5e7eb;
+      border-top: 6px solid #3b82f6;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    #global-loader .loading-text {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #374151;
+      font-weight: 600;
+      text-align: center;
+    }
+
     /* كلاس للأنيميشن */
     .fade-in {
       opacity: 0;
@@ -60,6 +93,14 @@
 </head>
 <body class="min-h-screen p-6 pb-20"> <!-- pb-20 علشان يسيب مساحة للبنر -->
 
+  <!-- لودنج الشاشة -->
+  <div id="global-loader">
+    <div class="flex flex-col items-center">
+      <div class="spinner"></div>
+      <div class="loading-text">جاري تحميل الأقسام...</div>
+    </div>
+  </div>
+
   <h1 class="text-3xl font-bold text-center text-white mb-8 drop-shadow-lg">الأقسام التعليمية</h1>
 
   <div id="sectionsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -79,18 +120,37 @@
     const sectionsContainer = document.getElementById("sectionsContainer");
     const message = document.getElementById("message");
 
+    // دالة لإخفاء اللودنج
+    function hideLoader() {
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    // إظهار اللودنج لمدة 4 ثواني
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+        
+        // إخفاء اللودنج بعد 4 ثواني
+        setTimeout(() => {
+          hideLoader();
+        }, 4000);
+      }
+    });
+
     fetch(`${apiUrl}?action=getSections`)
       .then(res => res.json())
       .then(data => {
         if (!data || data.length === 0) {
           message.textContent = "لا توجد أقسام متاحة حاليًا.";
           message.classList.remove("hidden");
-          // إخفاء اللودنج فوراً
-          const loader = document.getElementById('global-loader');
-          if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-          }
           return;
         }
 
@@ -116,55 +176,11 @@
           });
           sectionsContainer.appendChild(card);
         });
-        
-        // إخفاء اللودنج بعد تحميل البيانات بنجاح
-        const loader = document.getElementById('global-loader');
-        if(loader) {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 400);
-        }
       })
       .catch(error => {
         message.textContent = "❌ حدث خطأ أثناء تحميل الأقسام.";
         message.classList.remove("hidden");
-        // إخفاء اللودنج في حالة الخطأ
-        const loader = document.getElementById('global-loader');
-        if(loader) {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 400);
-        }
       });
   </script>
-  
-  <!-- سكريبت اختبار اللودنج (يمكن حذفه بعد الاختبار) -->
-  <script>
-    // اختبار اللودنج عند تحميل الصفحة
-    window.addEventListener('load', function() {
-      console.log('🧪 اختبار اللودنج في صفحة الأقسام...');
-      
-      const loader = document.getElementById('global-loader');
-      if (loader) {
-        console.log('✅ تم العثور على عنصر اللودنج');
-        
-        // اختبار إظهار اللودنج مرة أخرى
-        setTimeout(() => {
-          loader.style.display = 'flex';
-          loader.style.opacity = '1';
-          console.log('✅ تم إظهار اللودنج للاختبار');
-          
-          // إخفاء اللودنج بعد ثانيتين
-          setTimeout(() => {
-            loader.style.opacity = '0';
-            setTimeout(() => {
-              loader.style.display = 'none';
-              console.log('✅ تم إخفاء اللودنج بنجاح - الاختبار مكتمل');
-            }, 400);
-          }, 2000);
-        }, 3000);
-      } else {
-        console.error('❌ لم يتم العثور على عنصر اللودنج');
-      }
-    });
-  </script>
 </body>
-</html> 
+</html>

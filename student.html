@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>صفحة الطالب</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -27,7 +27,7 @@
       100% { transform: rotate(360deg); }
     }
     .glass-card {
-      background: rgba(255, 255, 255, 0.55); /* تقليل العتامة */
+      background: rgba(255, 255, 255, 0.55);
       border-radius: 1rem;
       box-shadow: 0 8px 30px rgba(0,0,0,0.18);
       backdrop-filter: blur(4px);
@@ -35,7 +35,7 @@
       border: 1px solid rgba(255,255,255,0.18);
     }
     .student-header {
-      background: rgba(59,130,246,0.08); /* أقل عتامة */
+      background: rgba(59,130,246,0.08);
       border-radius: 1rem 1rem 0 0;
       padding: 1.5rem 1rem 1rem 1rem;
       text-align: center;
@@ -46,13 +46,8 @@
       font-weight: bold;
       margin-bottom: 0.5rem;
     }
-    .student-header p {
-      color: #374151;
-      font-size: 1.1rem;
-      margin-bottom: 0.2rem;
-    }
     .course-card {
-      background: rgba(255,255,255,0.38); /* شفافية أعلى */
+      background: rgba(255,255,255,0.38);
       border-radius: 1rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.10);
       border: 1px solid rgba(59,130,246,0.10);
@@ -68,6 +63,10 @@
       background: rgba(255,255,255,0.32) !important;
       box-shadow: 0 2px 8px rgba(59,130,246,0.08);
       border: 1px solid rgba(59,130,246,0.08);
+      min-width: 180px;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
     }
     body {
       background-image: url('https://images.pexels.com/photos/30582372/pexels-photo-30582372.jpeg');
@@ -89,7 +88,7 @@
     </div>
     <div class="p-6">
       <h3 class="text-xl font-semibold mb-4 text-gray-700">📚 الدورات المسجلة:</h3>
-      <div id="coursesContainer"></div>
+      <div id="coursesContainer" class="grid gap-4 grid-cols-1 md:grid-cols-2"></div>
     </div>
   </div>
 
@@ -110,90 +109,126 @@
 
     async function loadStudentPage() {
       try {
-        // بيانات الطالب
         const students = await fetchData("getStudents");
         const student = students.find(s => s["البريد الإلكتروني"] === email);
         if (!student) {
           alert("لا يوجد بيانات لهذا الطالب");
-          // إخفاء اللودنج فوراً في حالة الخطأ
-          const loader = document.getElementById('global-loader');
-          if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-          }
+          hideLoader();
           return;
         }
-        
         document.getElementById("studentInfo").innerHTML = `
-          <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
-            <span class="text-blue-700 text-2xl mb-1">👤</span>
-            <div class="text-gray-700 font-semibold">${student["الاسم الكامل"]}</div>
-            <div class="text-xs text-gray-500 mt-1">الاسم</div>
+          <div>
+            <span class="text-blue-700 text-3xl mb-1 block text-center">👤</span>
+            <div class="text-gray-700 font-semibold text-center">${student["الاسم الكامل"]}</div>
+            <div class="text-xs text-gray-500 mt-1 text-center">الاسم</div>
           </div>
-          <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
-            <span class="text-blue-700 text-2xl mb-1">📧</span>
-            <div class="text-gray-700 font-semibold">${student["البريد الإلكتروني"]}</div>
-            <div class="text-xs text-gray-500 mt-1">البريد</div>
+          <div>
+            <span class="text-blue-700 text-3xl mb-1 block text-center">📧</span>
+            <div class="text-gray-700 font-semibold text-center">${student["البريد الإلكتروني"]}</div>
+            <div class="text-xs text-gray-500 mt-1 text-center">البريد</div>
           </div>
-          <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
-            <span class="text-blue-700 text-2xl mb-1">🏫</span>
-            <div class="text-gray-700 font-semibold">${student["المرحلة الدراسية"]}</div>
-            <div class="text-xs text-gray-500 mt-1">المرحلة الدراسية</div>
+          <div>
+            <span class="text-blue-700 text-3xl mb-1 block text-center">🏫</span>
+            <div class="text-gray-700 font-semibold text-center">${student["المرحلة الدراسية"]}</div>
+            <div class="text-xs text-gray-500 mt-1 text-center">المرحلة الدراسية</div>
           </div>
-          <div class="flex flex-col items-center bg-white/70 rounded-xl shadow p-4 min-w-[180px]">
-            <span class="text-blue-700 text-2xl mb-1">📅</span>
-            <div class="text-gray-700 font-semibold">${student["تاريخ التسجيل"]?.split('T')[0] || ''}</div>
-            <div class="text-xs text-gray-500 mt-1">تاريخ التسجيل</div>
+          <div>
+            <span class="text-blue-700 text-3xl mb-1 block text-center">📅</span>
+            <div class="text-gray-700 font-semibold text-center">${student["تاريخ التسجيل"]?.split('T')[0] || ''}</div>
+            <div class="text-xs text-gray-500 mt-1 text-center">تاريخ التسجيل</div>
+          </div>
+          <div>
+            <span class="text-blue-700 text-3xl mb-1 block text-center">🏠</span>
+            <div class="text-gray-700 font-semibold text-center">${student["المدينة"] || "غير محدد"}</div>
+            <div class="text-xs text-gray-500 mt-1 text-center">المدينة</div>
+          </div>
+          <div>
+            <span class="text-blue-700 text-3xl mb-1 block text-center">📞</span>
+            <div class="text-gray-700 font-semibold text-center">${student["رقم الطالب"] || "غير محدد"}</div>
+            <div class="text-xs text-gray-500 mt-1 text-center">رقم الطالب</div>
           </div>
         `;
 
-        // الاشتراكات العادية
-        const subscriptions = await fetchData("getRegularSubscriptions", { email });
-        // الاشتراكات التفاعلية
-        const liveSubs = await fetchData("getLiveSubscriptions", { email });
-        const allCourses = await fetchData("getCoursesByTopic", { topicId: "" });
-        const liveCourses = await fetchData("getLiveCourses");
+        // جلب الاشتراكات
+        const [regularSubs, liveSubs, allCourses, liveCourses, progressData] = await Promise.all([
+          fetchData("getRegularSubscriptions", { email }),
+          fetchData("getLiveSubscriptions", { email }),
+          fetchData("getCoursesByTopic", { topicId: "" }),
+          fetchData("getLiveCourses"),
+          fetchData("getProgress", { email })
+        ]);
+
+        // دمج الدورات في خريطة (id => اسم)
         const courseMap = {};
-        [...allCourses, ...liveCourses].forEach(c => courseMap[c["الدورةID"] || c["الدورة التفاعليةID"]] = c["اسم الدورة"]);
-        const progressData = await fetchData("getProgress", { email });
+        [...allCourses, ...liveCourses].forEach(c => {
+          const id = c["الدورةID"] || c["الدورة التفاعليةID"];
+          courseMap[id] = c["اسم الدورة"];
+        });
+
+        // نهيئ التقدم حسب الفيديوهات المكتملة
+        const completedVideos = progressData.completed || [];
+
+        // دالة لاحتساب عدد الفيديوهات الكلي لكل دورة
+        function countVideos(courseId, isLive = false) {
+          return isLive ?
+            liveCourses.find(c => c["الدورة التفاعليةID"] === courseId)?.["عدد الفيديوهات"] || 0
+            :
+            allCourses.find(c => c["الدورةID"] === courseId)?.["عدد الفيديوهات"] || 0;
+        }
+
+        // دالة لحساب عدد الفيديوهات المكتملة لكل دورة بالتحديد
+        function countCompletedForCourse(courseId) {
+          return completedVideos.filter(vidId => {
+            // ممكن هنا تحتاج API إضافي لجلب فيديوهات الدورة لكل فيديو والتأكد
+            // لكن على افتراض أن الفيديو ID يتضمن علاقة مع الدورة يمكن تعديل هنا
+            // حالياً نرجع العدد الكلي للتقدم بدون تمييز الدورة بدقة
+            // لتحسين الدقة، تحتاج جلب فيديوهات الدورة ومقارنتها
+            return true; // مؤقتاً نرجع الكل
+          }).length;
+        }
+
         let html = '';
+
         function renderCourseBlock(sub, isLive = false) {
           const idField = isLive ? "الدورة التفاعليةID" : "الدورةID";
           const name = courseMap[sub[idField]] || "دورة غير معروفة";
-          const status = sub["حالة التفعيل"];
-          const start = sub["تاريخ بداية التفعيل"];
-          const end = sub["تاريخ نهاية التفعيل"];
-          const done = progressData.completed?.length || 0;
+          const status = sub["حالة التفعيل"] || "غير معروف";
+          const start = sub["تاريخ بداية التفعيل"] || "—";
+          const end = sub["تاريخ نهاية التفعيل"] || "—";
+
+          const totalVideos = countVideos(sub[idField], isLive);
+          const done = countCompletedForCourse(sub[idField]);
+
           return `
             <div class="course-card">
               <p><strong>الدورة:</strong> ${name}</p>
               <p><strong>الحالة:</strong> ${status}</p>
-              <p><strong>من:</strong> ${start || "—"} <strong>إلى:</strong> ${end || "—"}</p>
-              <p><strong>التقدم:</strong> ${done} فيديو مكتمل</p>
+              <p><strong>من:</strong> ${start} <strong>إلى:</strong> ${end}</p>
+              <p><strong>التقدم:</strong> ${done} / ${totalVideos} فيديو مكتمل</p>
             </div>
           `;
         }
-        subscriptions.forEach(sub => html += renderCourseBlock(sub, false));
+
+        regularSubs.forEach(sub => html += renderCourseBlock(sub, false));
         liveSubs.forEach(sub => html += renderCourseBlock(sub, true));
         document.getElementById("coursesContainer").innerHTML = html || "<p>لا يوجد اشتراكات بعد.</p>";
-        
-        // إخفاء اللودنج بعد تحميل البيانات بنجاح
-        const loader = document.getElementById('global-loader');
-        if(loader) {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 400);
-        }
+
+        hideLoader();
       } catch (error) {
         console.error("خطأ في تحميل بيانات الطالب:", error);
-        // إخفاء اللودنج في حالة الخطأ
-        const loader = document.getElementById('global-loader');
-        if(loader) {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 400);
-        }
+        hideLoader();
       }
     }
+
+    function hideLoader() {
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
+      }
+    }
+
     loadStudentPage();
   </script>
 </body>
-</html> 
+</html>

@@ -60,7 +60,7 @@
       color: #00ffc8;
       text-decoration: underline;
     }
-    
+
     #global-loader {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -71,6 +71,7 @@
       justify-content: center;
       transition: opacity 0.4s;
     }
+
     #global-loader .spinner {
       border: 6px solid #eee;
       border-top: 6px solid #3498db;
@@ -79,6 +80,7 @@
       height: 60px;
       animation: spin 1s linear infinite;
     }
+
     @keyframes spin {
       100% { transform: rotate(360deg); }
     }
@@ -112,12 +114,7 @@
     if (!user || !courseId) {
       message.textContent = "❌ لم يتم تحديد الدورة أو تسجيل الدخول.";
       message.classList.remove("hidden");
-      // إخفاء اللودنج فوراً في حالة الخطأ
-      const loader = document.getElementById('global-loader');
-      if(loader) {
-        loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 400);
-      }
+      hideLoader();
     } else {
       fetch(`${apiUrl}?action=getLecturesByCourse&courseId=${courseId}&email=${user["البريد الإلكتروني"]}`)
         .then(res => res.json())
@@ -125,24 +122,14 @@
           if (data.status === "error") {
             message.textContent = data.message;
             message.classList.remove("hidden");
-            // إخفاء اللودنج فوراً
-            const loader = document.getElementById('global-loader');
-            if(loader) {
-              loader.style.opacity = '0';
-              setTimeout(() => loader.style.display = 'none', 400);
-            }
+            hideLoader();
             return;
           }
 
           if (!data || data.length === 0) {
             message.textContent = "🚫 لا توجد محاضرات متاحة لهذه الدورة.";
             message.classList.remove("hidden");
-            // إخفاء اللودنج فوراً
-            const loader = document.getElementById('global-loader');
-            if(loader) {
-              loader.style.opacity = '0';
-              setTimeout(() => loader.style.display = 'none', 400);
-            }
+            hideLoader();
             return;
           }
 
@@ -154,31 +141,30 @@
             div.innerHTML = `
               <h2 class="text-xl font-bold mb-2">${lecture["عنوان المحاضرة"]}</h2>
               <p class="mb-3">${lecture["وصف المحاضرة"] || "لا يوجد وصف"}</p>
-              <a href="videos.html?lectureId=${lecture["المحاضرةID"]}" class="inline-block bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
+              <a href="videos.html?courseId=${courseId}&lectureId=${lecture["المحاضرةID"]}" 
+                 class="inline-block bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
                 مشاهدة الفيديوهات
               </a>
             `;
             lecturesContainer.appendChild(div);
           });
-          
-          // إخفاء اللودنج بعد تحميل البيانات بنجاح
-          const loader = document.getElementById('global-loader');
-          if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-          }
+
+          hideLoader();
         })
-        .catch(err => {
+        .catch(() => {
           message.textContent = "❌ حدث خطأ أثناء تحميل المحاضرات.";
           message.classList.remove("hidden");
-          // إخفاء اللودنج في حالة الخطأ
-          const loader = document.getElementById('global-loader');
-          if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-          }
+          hideLoader();
         });
+    }
+
+    function hideLoader() {
+      const loader = document.getElementById('global-loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
+      }
     }
   </script>
 </body>
-</html> 
+</html>

@@ -84,6 +84,33 @@
     @keyframes spin {
       100% { transform: rotate(360deg); }
     }
+
+    /* أنماط الأزرار المحسنة */
+    .btn-loading {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .btn-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 
@@ -129,6 +156,25 @@
 
     let selectedCourseId = null;
     let selectedDuration = null;
+    let isProcessing = false; // متغير لمنع الضغط المتكرر
+
+    // دالة لتفعيل/إلغاء تفعيل الأزرار
+    function setButtonLoading(button, isLoading) {
+      if (isLoading) {
+        button.classList.add('btn-loading');
+        button.disabled = true;
+        const originalText = button.textContent;
+        button.setAttribute('data-original-text', originalText);
+        button.textContent = 'جاري التحميل...';
+      } else {
+        button.classList.remove('btn-loading');
+        button.disabled = false;
+        const originalText = button.getAttribute('data-original-text');
+        if (originalText) {
+          button.textContent = originalText;
+        }
+      }
+    }
 
     if (!user || !topicId) {
       message.textContent = "❌ لم يتم تحديد الباب أو تسجيل الدخول.";
@@ -162,14 +208,41 @@
             card.innerHTML = `
               <h2 class="text-xl font-bold mb-1">${course["اسم الدورة"]}</h2>
               <p class="mb-2">${course["وصف الدورة"]}</p>
-              <p class="text-green-300 font-medium">💵 السعر: ${course["سعر الدورة"]} جنيه</p>
+              <p class="text-green-300 font-medium">💵 السعر: ${course["سعر الدورة"]} </p>
               <p class="text-purple-300 font-medium">⏱️ المدة: ${course["المدة باليوم"]} يوم</p>
               <div class="mt-4 flex gap-2 flex-wrap">
-                <button class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700" onclick="showPayment('${course["الدورةID"]}', '${course["المدة باليوم"]}')">اشترك الآن</button>
-                <button class="bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700" onclick="goToLectures('${course["الدورةID"]}')">شاهد المحتوى</button>
+                <button class="subscribe-btn bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700" 
+                        data-course-id="${course["الدورةID"]}" 
+                        data-duration="${course["المدة باليوم"]}">
+                  اشترك الآن
+                </button>
+                <button class="view-content-btn bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700" 
+                        data-course-id="${course["الدورةID"]}">
+                  شاهد المحتوى
+                </button>
               </div>
             `;
             coursesContainer.appendChild(card);
+          });
+          
+          // إضافة event listeners للأزرار
+          document.querySelectorAll('.subscribe-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              if (isProcessing) return; // منع الضغط المتكرر
+              
+              const courseId = this.getAttribute('data-course-id');
+              const duration = this.getAttribute('data-duration');
+              showPayment(courseId, duration, this);
+            });
+          });
+
+          document.querySelectorAll('.view-content-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              if (isProcessing) return; // منع الضغط المتكرر
+              
+              const courseId = this.getAttribute('data-course-id');
+              goToLectures(courseId, this);
+            });
           });
           
           // إخفاء اللودنج بعد تحميل البيانات بنجاح
@@ -191,7 +264,12 @@
         });
     }
 
-    function showPayment(courseId, duration) {
+    function showPayment(courseId, duration, button) {
+      if (isProcessing) return;
+      
+      isProcessing = true;
+      setButtonLoading(button, true);
+      
       selectedCourseId = courseId;
       selectedDuration = duration;
 
@@ -211,12 +289,26 @@
             paymentList.appendChild(li);
           });
           modal.classList.remove("hidden");
+          setButtonLoading(button, false);
+          isProcessing = false;
+        })
+        .catch(() => {
+          alert("❌ حدث خطأ أثناء تحميل طرق الدفع.");
+          setButtonLoading(button, false);
+          isProcessing = false;
         });
     }
 
     confirmBtn.addEventListener("click", () => {
+      if (isProcessing) return;
+      
+      isProcessing = true;
+      setButtonLoading(confirmBtn, true);
+      
       if (!user || !user["البريد الإلكتروني"]) {
         alert("❌ لم يتم العثور على بيانات تسجيل الدخول.");
+        setButtonLoading(confirmBtn, false);
+        isProcessing = false;
         return;
       }
 
@@ -233,22 +325,38 @@
       .then(data => {
         alert("✅ " + data.message);
         closeModal();
+        setButtonLoading(confirmBtn, false);
+        isProcessing = false;
       })
       .catch(() => {
         alert("❌ حدث خطأ أثناء إرسال الاشتراك.");
+        setButtonLoading(confirmBtn, false);
+        isProcessing = false;
       });
     });
 
-    function goToLectures(courseId) {
+    function goToLectures(courseId, button) {
+      if (isProcessing) return;
+      
+      isProcessing = true;
+      setButtonLoading(button, true);
+      
       fetch(`${apiUrl}?action=getLecturesByCourse&courseId=${courseId}&email=${user["البريد الإلكتروني"]}`)
         .then(res => res.json())
         .then(data => {
           if (data.status === "error") {
             alert(data.message);
+            setButtonLoading(button, false);
+            isProcessing = false;
           } else {
             localStorage.setItem("courseId", courseId);
             window.location.href = "lectures.html";
           }
+        })
+        .catch(() => {
+          alert("❌ حدث خطأ أثناء التحقق من الاشتراك.");
+          setButtonLoading(button, false);
+          isProcessing = false;
         });
     }
 

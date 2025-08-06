@@ -13,6 +13,39 @@
       background-repeat: no-repeat;
     }
 
+    /* لودنج الشاشة */
+    #global-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.95);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    #global-loader .spinner {
+      border: 6px solid #e5e7eb;
+      border-top: 6px solid #3b82f6;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    #global-loader .loading-text {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #374151;
+      font-weight: 600;
+      text-align: center;
+    }
+
     .card-hover {
       background-color: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(8px);
@@ -46,6 +79,14 @@
 </head>
 <body class="min-h-screen p-6 pb-20"> <!-- pb-20 علشان يسيب مساحة للبنر -->
 
+  <!-- لودنج الشاشة -->
+  <div id="global-loader">
+    <div class="flex flex-col items-center">
+      <div class="spinner"></div>
+      <div class="loading-text">جاري تحميل الأبواب...</div>
+    </div>
+  </div>
+
   <h1 class="text-3xl font-bold text-center text-white mb-8 drop-shadow-lg">الأبواب التعليمية</h1>
 
   <div id="topicsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -66,15 +107,34 @@
     const topicsContainer = document.getElementById("topicsContainer");
     const message = document.getElementById("message");
 
-    if (!sectionId) {
-      message.textContent = "❌ لم يتم تحديد القسم.";
-      message.classList.remove("hidden");
-      // إخفاء اللودنج فوراً في حالة الخطأ
+    // دالة لإخفاء اللودنج
+    function hideLoader() {
       const loader = document.getElementById('global-loader');
       if(loader) {
         loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 400);
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
       }
+    }
+
+    // إظهار اللودنج لمدة 4 ثواني
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('global-loader');
+      if(loader) {
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+        
+        // إخفاء اللودنج بعد 4 ثواني
+        setTimeout(() => {
+          hideLoader();
+        }, 4000);
+      }
+    });
+
+    if (!sectionId) {
+      message.textContent = "❌ لم يتم تحديد القسم.";
+      message.classList.remove("hidden");
     } else {
       fetch(`${apiUrl}?action=getTopicsBySection&sectionId=${sectionId}`)
         .then(res => res.json())
@@ -82,12 +142,6 @@
           if (!data || data.length === 0) {
             message.textContent = "🚫 لا توجد أبواب تابعة لهذا القسم.";
             message.classList.remove("hidden");
-            // إخفاء اللودنج فوراً
-            const loader = document.getElementById('global-loader');
-            if(loader) {
-              loader.style.opacity = '0';
-              setTimeout(() => loader.style.display = 'none', 400);
-            }
             return;
           }
 
@@ -105,23 +159,10 @@
             });
             topicsContainer.appendChild(card);
           });
-          
-          // إخفاء اللودنج بعد تحميل البيانات بنجاح
-          const loader = document.getElementById('global-loader');
-          if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-          }
         })
         .catch(error => {
           message.textContent = "❌ حدث خطأ أثناء تحميل الأبواب.";
           message.classList.remove("hidden");
-          // إخفاء اللودنج في حالة الخطأ
-          const loader = document.getElementById('global-loader');
-          if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
-          }
         });
     }
   </script>

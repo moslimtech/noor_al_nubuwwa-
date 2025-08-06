@@ -215,6 +215,13 @@
       <button id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg text-lg transition">إرسال الإجابات</button>
     </div>
     <div id="resultMessage" class="text-center text-xl font-bold text-green-300 mt-6 hidden"></div>
+
+    <!-- زر العودة -->
+    <div class="text-center mt-4">
+      <a id="backToLecture" href="#" class="text-white underline hover:text-blue-300 transition">
+        ← العودة إلى الفيديو
+      </a>
+    </div>
   </div>
 
   <div class="dev-banner">
@@ -228,20 +235,31 @@
     const courseId = urlParams.get("courseId");
     const lectureId = urlParams.get("lectureId");
     const videoId = urlParams.get("videoId");
-    const user = JSON.parse(localStorage.getItem("user"));
+    
+    // تأمين جلب المستخدم، وإعادة التوجيه للصفحة الرئيسية أو تسجيل دخول إذا لم يكن موجود
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem("user"));
+      if (!user || !user["البريد الإلكتروني"]) throw new Error("مستخدم غير مسجل");
+    } catch (e) {
+      alert("يجب تسجيل الدخول أولاً!");
+      window.location.href = "signup.html";
+    }
 
     const quizContainer = document.getElementById("quizContainer");
     const resultMessage = document.getElementById("resultMessage");
     const submitBtn = document.getElementById("submitBtn");
+    const backToLecture = document.getElementById("backToLecture");
+
+    // تعيين رابط العودة للفيديو حسب المعرفات
+    backToLecture.href = `lecture.html?courseId=${courseId}&lectureId=${lectureId}`;
 
     // دالة إنشاء الاحتفال
     function createCelebration() {
       const celebration = document.getElementById('celebration');
       celebration.style.display = 'block';
       
-      // إنشاء بالونات ملونة
       const balloonColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
-      
       for (let i = 0; i < 15; i++) {
         const balloon = document.createElement('div');
         balloon.className = 'balloon';
@@ -252,9 +270,7 @@
         celebration.appendChild(balloon);
       }
       
-      // إنشاء قرطاس ملون
       const confettiColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#ff9ff3'];
-      
       for (let i = 0; i < 100; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
@@ -279,7 +295,6 @@
       `;
       document.body.appendChild(modal);
       
-      // إزالة النافذة تلقائياً بعد 5 ثواني
       setTimeout(() => {
         if (modal.parentElement) {
           modal.remove();
@@ -305,7 +320,6 @@
       `;
       document.body.appendChild(modal);
       
-      // إزالة النافذة تلقائياً بعد 8 ثواني (وقت أطول للقراءة)
       setTimeout(() => {
         if (modal.parentElement) {
           modal.remove();
@@ -316,7 +330,6 @@
     if (!courseId || !lectureId || !videoId || !user) {
       quizContainer.innerHTML = '<p class="text-red-600 text-center">❌ حدث خطأ في تحميل الأسئلة.</p>';
       submitBtn.style.display = 'none';
-      // إخفاء اللودنج فوراً في حالة الخطأ
       const loader = document.getElementById('global-loader');
       if(loader) {
         loader.style.opacity = '0';
@@ -329,7 +342,6 @@
           if (!Array.isArray(data) || data.length === 0) {
             quizContainer.innerHTML = '<p class="text-red-600 text-center">🚫 لا توجد أسئلة متاحة لهذا الفيديو.</p>';
             submitBtn.style.display = 'none';
-            // إخفاء اللودنج فوراً
             const loader = document.getElementById('global-loader');
             if(loader) {
               loader.style.opacity = '0';
@@ -357,7 +369,6 @@
             quizContainer.appendChild(div);
           });
           
-          // إخفاء اللودنج بعد تحميل البيانات بنجاح
           const loader = document.getElementById('global-loader');
           if(loader) {
             loader.style.opacity = '0';
@@ -383,6 +394,11 @@
               return;
             }
 
+            // إظهار انتظار التقييم
+            submitBtn.textContent = "جارٍ التقييم...";
+            submitBtn.disabled = true;
+            submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+
             const correctCount = answers.filter(a => a.answer === a.correct).length;
             const result = `${correctCount} / ${answers.length}`;
 
@@ -402,9 +418,7 @@
             .then(() => {
               resultMessage.textContent = `✅ تم إرسال إجاباتك بنجاح! نتيجتك: ${result}`;
               resultMessage.classList.remove("hidden");
-              submitBtn.disabled = true;
-              submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
-              
+
               // إذا حصل على الدرجة الكاملة، أظهر الاحتفال
               if (correctCount === data.length) {
                 createCelebration();
@@ -412,16 +426,20 @@
                   showCongratulations(correctCount, data.length);
                 }, 500);
               } else {
-                // إذا لم يحصل على الدرجة الكاملة، أظهر رسالة المراجعة
                 showReviewMessage(correctCount, data.length);
               }
+            })
+            .catch(() => {
+              alert("حدث خطأ أثناء إرسال الإجابات، حاول مرة أخرى.");
+              submitBtn.textContent = "إرسال الإجابات";
+              submitBtn.disabled = false;
+              submitBtn.classList.remove("bg-gray-400", "cursor-not-allowed");
             });
           });
         })
         .catch(() => {
           quizContainer.innerHTML = '<p class="text-red-600 text-center">❌ حدث خطأ أثناء تحميل الأسئلة.</p>';
           submitBtn.style.display = 'none';
-          // إخفاء اللودنج في حالة الخطأ
           const loader = document.getElementById('global-loader');
           if(loader) {
             loader.style.opacity = '0';
@@ -431,4 +449,4 @@
     }
   </script>
 </body>
-</html> 
+</html>
