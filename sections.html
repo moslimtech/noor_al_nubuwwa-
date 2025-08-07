@@ -134,6 +134,19 @@
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
     }
 
+    .nav-btn.logout-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+      border-color: transparent;
+      box-shadow: 0 1px 8px rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+    }
+
+    .nav-btn.logout-btn:hover {
+      background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.25);
+    }
+
     /* عنوان الصفحة المحسن تحت الناف بار */
     .page-title {
       background: rgba(0, 0, 0, 0.08);
@@ -383,6 +396,9 @@
         <a href="student.html" class="nav-btn">
           👤 الملف الشخصي
         </a>
+        <button id="logoutBtn" class="nav-btn logout-btn">
+          🚪 تسجيل الخروج
+        </button>
       </div>
     </div>
   </nav>
@@ -418,6 +434,21 @@
     const apiUrl = "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec";
     const sectionsContainer = document.getElementById("sectionsContainer");
     const message = document.getElementById("message");
+
+    // إضافة مستمع حدث لزر تسجيل الخروج
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+        // حذف بيانات المستخدم من localStorage
+        localStorage.removeItem("user");
+        localStorage.removeItem("userToken");
+        
+        // إظهار رسالة تأكيد
+        alert('تم تسجيل الخروج بنجاح');
+        
+        // التوجيه إلى صفحة تسجيل الدخول
+        window.location.href = 'login.html';
+      }
+    });
 
     // دالة لإخفاء اللودنج
     function hideLoader() {
