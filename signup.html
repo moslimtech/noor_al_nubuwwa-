@@ -38,28 +38,184 @@
     }
     .phone-input-container {
       display: flex;
-      gap: 8px;
+      gap: 0;
       align-items: stretch;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      background: white;
     }
+    
+    .phone-input-container:focus-within {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      border-color: #3b82f6;
+    }
+    
     .country-code-select {
       width: 140px;
       flex-shrink: 0;
-      border-radius: 6px 0 0 6px;
-      border-right: none;
+      border: none;
+      border-right: 1px solid #e5e7eb;
+      border-radius: 0;
+      background: #f9fafb;
+      font-size: 0.875rem;
+      color: #374151;
+      transition: all 0.3s ease;
     }
+    
+    .country-code-select:focus {
+      outline: none;
+      background: #f3f4f6;
+      border-color: #3b82f6;
+    }
+    
     .phone-number-input {
       flex: 1;
-      border-radius: 0 6px 6px 0;
-      border-left: none;
+      border: none;
+      border-radius: 0;
+      background: white;
+      transition: all 0.3s ease;
     }
-    .phone-input-container:focus-within {
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-      border-radius: 6px;
+    
+    .phone-number-input:focus {
+      outline: none;
+      background: #fefefe;
     }
+    
     .phone-input-container:focus-within .country-code-select,
     .phone-input-container:focus-within .phone-number-input {
       border-color: #3b82f6;
+    }
+    
+    /* تحسين مظهر select */
+    .country-code-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 8px center;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      padding-right: 32px;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    
+    /* تحسين مظهر option */
+    .country-code-select option {
+      padding: 8px 12px;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      background: white;
+      color: #374151;
+    }
+    
+    /* تحسين مظهر option عند hover */
+    .country-code-select option:hover {
+      background: #f3f4f6;
+    }
+    
+    /* تحسين مظهر option المحدد */
+    .country-code-select option:checked {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    /* تحسين عرض القائمة المنسدلة */
+    .country-code-select {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    /* تحسينات للشاشات الصغيرة */
+    @media (max-width: 640px) {
+      .phone-input-container {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .country-code-select {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        border-radius: 6px 6px 0 0;
+      }
+      
+      .phone-number-input {
+        border-radius: 0 0 6px 6px;
+      }
+      
+      .phone-input-container:focus-within .country-code-select {
+        border-bottom-color: #3b82f6;
+      }
+    }
+    
+    /* تحسينات إضافية للتصميم */
+    .phone-input-container:hover {
+      border-color: #9ca3af;
+    }
+    
+    .country-code-select:hover {
+      background: #f3f4f6;
+    }
+    
+    .phone-number-input:hover {
+      background: #fefefe;
+    }
+    
+    /* تحسينات حقول كلمات المرور */
+    .password-field {
+      position: relative;
+    }
+    
+    .password-toggle-btn {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .password-toggle-btn:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+    
+    .password-toggle-btn:focus {
       outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* تحسينات checkbox الشروط */
+    .terms-checkbox {
+      accent-color: #3b82f6;
+    }
+    
+    .terms-checkbox:checked {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+    }
+    
+    /* تحسينات رسائل التحقق */
+    .validation-message {
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      transition: all 0.3s ease;
+    }
+    
+    .validation-message.success {
+      color: #059669;
+    }
+    
+    .validation-message.error {
+      color: #dc2626;
+    }
+    
+    .validation-message.warning {
+      color: #d97706;
     }
   </style>
 </head>
@@ -78,134 +234,139 @@
       
       <!-- رقم الهاتف مع مفتاح الدولة -->
       <div class="phone-input-container">
-        <select name="countryCode" required class="country-code-select px-4 py-2 border rounded-r-none focus:outline-none focus:ring-0 focus:border-blue-500">
-          <option value="">🌍 مفتاح الدولة</option>
-          <option value="+966">🇸🇦 +966 (السعودية)</option>
-          <option value="+971">🇦🇪 +971 (الإمارات)</option>
-          <option value="+965">🇰🇼 +965 (الكويت)</option>
-          <option value="+973">🇧🇭 +973 (البحرين)</option>
-          <option value="+974">🇶🇦 +974 (قطر)</option>
-          <option value="+968">🇴🇲 +968 (عمان)</option>
-          <option value="+967">🇾🇪 +967 (اليمن)</option>
-          <option value="+962">🇯🇴 +962 (الأردن)</option>
-          <option value="+961">🇱🇧 +961 (لبنان)</option>
-          <option value="+963">🇸🇾 +963 (سوريا)</option>
-          <option value="+964">🇮🇶 +964 (العراق)</option>
-          <option value="+20">🇪🇬 +20 (مصر)</option>
-          <option value="+212">🇲🇦 +212 (المغرب)</option>
-          <option value="+213">🇩🇿 +213 (الجزائر)</option>
-          <option value="+216">🇹🇳 +216 (تونس)</option>
-          <option value="+218">🇱🇾 +218 (ليبيا)</option>
-          <option value="+249">🇸🇩 +249 (السودان)</option>
-          <option value="+252">🇸🇴 +252 (الصومال)</option>
-          <option value="+253">🇩🇯 +253 (جيبوتي)</option>
-          <option value="+254">🇰🇪 +254 (كينيا)</option>
-          <option value="+255">🇹🇿 +255 (تنزانيا)</option>
-          <option value="+256">🇺🇬 +256 (أوغندا)</option>
-          <option value="+257">🇧🇮 +257 (بوروندي)</option>
-          <option value="+258">🇲🇿 +258 (موزمبيق)</option>
-          <option value="+260">🇿🇲 +260 (زامبيا)</option>
-          <option value="+261">🇲🇬 +261 (مدغشقر)</option>
-          <option value="+262">🇷🇪 +262 (ريونيون)</option>
-          <option value="+263">🇿🇼 +263 (زيمبابوي)</option>
-          <option value="+264">🇳🇦 +264 (ناميبيا)</option>
-          <option value="+265">🇲🇼 +265 (ملاوي)</option>
-          <option value="+266">🇱🇸 +266 (ليسوتو)</option>
-          <option value="+267">🇧🇼 +267 (بوتسوانا)</option>
-          <option value="+268">🇸🇿 +268 (إسواتيني)</option>
-          <option value="+269">🇰🇲 +269 (جزر القمر)</option>
-          <option value="+27">🇿🇦 +27 (جنوب أفريقيا)</option>
-          <option value="+290">🇸🇭 +290 (سانت هيلينا)</option>
-          <option value="+291">🇪🇷 +291 (إريتريا)</option>
-          <option value="+297">🇦🇼 +297 (أروبا)</option>
-          <option value="+298">🇫🇴 +298 (جزر فارو)</option>
-          <option value="+299">🇬🇱 +299 (جرينلاند)</option>
-          <option value="+30">🇬🇷 +30 (اليونان)</option>
-          <option value="+31">🇳🇱 +31 (هولندا)</option>
-          <option value="+32">🇧🇪 +32 (بلجيكا)</option>
-          <option value="+33">🇫🇷 +33 (فرنسا)</option>
-          <option value="+34">🇪🇸 +34 (إسبانيا)</option>
-          <option value="+350">🇬🇮 +350 (جبل طارق)</option>
-          <option value="+351">🇵🇹 +351 (البرتغال)</option>
-          <option value="+352">🇱🇺 +352 (لوكسمبورغ)</option>
-          <option value="+353">🇮🇪 +353 (أيرلندا)</option>
-          <option value="+354">🇮🇸 +354 (آيسلندا)</option>
-          <option value="+355">🇦🇱 +355 (ألبانيا)</option>
-          <option value="+356">🇲🇹 +356 (مالطا)</option>
-          <option value="+357">🇨🇾 +357 (قبرص)</option>
-          <option value="+358">🇫🇮 +358 (فنلندا)</option>
-          <option value="+359">🇧🇬 +359 (بلغاريا)</option>
-          <option value="+36">🇭🇺 +36 (المجر)</option>
-          <option value="+370">🇱🇹 +370 (ليتوانيا)</option>
-          <option value="+371">🇱🇻 +371 (لاتفيا)</option>
-          <option value="+372">🇪🇪 +372 (إستونيا)</option>
-          <option value="+373">🇲🇩 +373 (مولدوفا)</option>
-          <option value="+374">🇦🇲 +374 (أرمينيا)</option>
-          <option value="+375">🇧🇾 +375 (بيلاروسيا)</option>
-          <option value="+376">🇦🇩 +376 (أندورا)</option>
-          <option value="+377">🇲🇨 +377 (موناكو)</option>
-          <option value="+378">🇸🇲 +378 (سان مارينو)</option>
-          <option value="+380">🇺🇦 +380 (أوكرانيا)</option>
-          <option value="+381">🇷🇸 +381 (صربيا)</option>
-          <option value="+382">🇲🇪 +382 (الجبل الأسود)</option>
-          <option value="+385">🇭🇷 +385 (كرواتيا)</option>
-          <option value="+386">🇸🇮 +386 (سلوفينيا)</option>
-          <option value="+387">🇧🇦 +387 (البوسنة والهرسك)</option>
-          <option value="+389">🇲🇰 +389 (مقدونيا الشمالية)</option>
-          <option value="+39">🇮🇹 +39 (إيطاليا)</option>
-          <option value="+40">🇷🇴 +40 (رومانيا)</option>
-          <option value="+41">🇨🇭 +41 (سويسرا)</option>
-          <option value="+420">🇨🇿 +420 (جمهورية التشيك)</option>
-          <option value="+421">🇸🇰 +421 (سلوفاكيا)</option>
-          <option value="+423">🇱🇮 +423 (ليختنشتاين)</option>
-          <option value="+43">🇦🇹 +43 (النمسا)</option>
-          <option value="+44">🇬🇧 +44 (المملكة المتحدة)</option>
-          <option value="+45">🇩🇰 +45 (الدنمارك)</option>
-          <option value="+46">🇸🇪 +46 (السويد)</option>
-          <option value="+47">🇳🇴 +47 (النرويج)</option>
-          <option value="+48">🇵🇱 +48 (بولندا)</option>
-          <option value="+49">🇩🇪 +49 (ألمانيا)</option>
-          <option value="+1">🇺🇸 +1 (الولايات المتحدة)</option>
-          <option value="+1">🇨🇦 +1 (كندا)</option>
-          <option value="+52">🇲🇽 +52 (المكسيك)</option>
-          <option value="+54">🇦🇷 +54 (الأرجنتين)</option>
-          <option value="+55">🇧🇷 +55 (البرازيل)</option>
-          <option value="+56">🇨🇱 +56 (تشيلي)</option>
-          <option value="+57">🇨🇴 +57 (كولومبيا)</option>
-          <option value="+58">🇻🇪 +58 (فنزويلا)</option>
-          <option value="+591">🇧🇴 +591 (بوليفيا)</option>
-          <option value="+593">🇪🇨 +593 (الإكوادور)</option>
-          <option value="+594">🇬🇫 +594 (غويانا الفرنسية)</option>
-          <option value="+595">🇵🇾 +595 (باراغواي)</option>
-          <option value="+596">🇲🇶 +596 (مارتينيك)</option>
-          <option value="+597">🇸🇷 +597 (سورينام)</option>
-          <option value="+598">🇺🇾 +598 (الأوروغواي)</option>
-          <option value="+599">🇧🇶 +599 (بونير)</option>
-          <option value="+60">🇲🇾 +60 (ماليزيا)</option>
-          <option value="+61">🇦🇺 +61 (أستراليا)</option>
-          <option value="+62">🇮🇩 +62 (إندونيسيا)</option>
-          <option value="+63">🇵🇭 +63 (الفلبين)</option>
-          <option value="+64">🇳🇿 +64 (نيوزيلندا)</option>
-          <option value="+65">🇸🇬 +65 (سنغافورة)</option>
-          <option value="+66">🇹🇭 +66 (تايلاند)</option>
-          <option value="+81">🇯🇵 +81 (اليابان)</option>
-          <option value="+82">🇰🇷 +82 (كوريا الجنوبية)</option>
-          <option value="+84">🇻🇳 +84 (فيتنام)</option>
-          <option value="+86">🇨🇳 +86 (الصين)</option>
-          <option value="+91">🇮🇳 +91 (الهند)</option>
-          <option value="+92">🇵🇰 +92 (باكستان)</option>
-          <option value="+93">🇦🇫 +93 (أفغانستان)</option>
-          <option value="+94">🇱🇰 +94 (سريلانكا)</option>
-          <option value="+95">🇲🇲 +95 (ميانمار)</option>
-          <option value="+98">🇮🇷 +98 (إيران)</option>
-          <option value="+880">🇧🇩 +880 (بنغلاديش)</option>
-          <option value="+977">🇳🇵 +977 (نيبال)</option>
-          <option value="+994">🇦🇿 +994 (أذربيجان)</option>
-          <option value="+995">🇬🇪 +995 (جورجيا)</option>
-          <option value="+996">🇰🇬 +996 (قيرغيزستان)</option>
-          <option value="+998">🇺🇿 +998 (أوزبكستان)</option>
+        <select name="countryCode" required class="country-code-select px-4 py-2 focus:outline-none focus:ring-0">
+          <option value="">🌍 اختر مفتاح الدولة</option>
+          <!-- الدول العربية الأكثر استخداماً -->
+          <option value="+966">🇸🇦 السعودية / Saudi Arabia +966</option>
+          <option value="+971">🇦🇪 الإمارات / UAE +971</option>
+          <option value="+965">🇰🇼 الكويت / Kuwait +965</option>
+          <option value="+973">🇧🇭 البحرين / Bahrain +973</option>
+          <option value="+974">🇶🇦 قطر / Qatar +974</option>
+          <option value="+968">🇴🇲 عمان / Oman +968</option>
+          <option value="+967">🇾🇪 اليمن / Yemen +967</option>
+          <option value="+962">🇯🇴 الأردن / Jordan +962</option>
+          <option value="+961">🇱🇧 لبنان / Lebanon +961</option>
+          <option value="+963">🇸🇾 سوريا / Syria +963</option>
+          <option value="+964">🇮🇶 العراق / Iraq +964</option>
+          <option value="+20">🇪🇬 مصر / Egypt +20</option>
+          <option value="+212">🇲🇦 المغرب / Morocco +212</option>
+          <option value="+213">🇩🇿 الجزائر / Algeria +213</option>
+          <option value="+216">🇹🇳 تونس / Tunisia +216</option>
+          <option value="+218">🇱🇾 ليبيا / Libya +218</option>
+          <option value="+249">🇸🇩 السودان / Sudan +249</option>
+          <option value="+252">🇸🇴 الصومال / Somalia +252</option>
+          <option value="+253">🇩🇯 جيبوتي / Djibouti +253</option>
+          <option value="+269">🇰🇲 جزر القمر / Comoros +269</option>
+          <option value="+291">🇪🇷 إريتريا / Eritrea +291</option>
+          <option value="+970">🇵🇸 فلسطين / Palestine +970</option>
+          <option value="+967">🇾🇪 اليمن / Yemen +967</option>
+          
+          <!-- باقي الدول -->
+          <option value="+254">🇰🇪 كينيا / Kenya +254</option>
+          <option value="+255">🇹🇿 تنزانيا / Tanzania +255</option>
+          <option value="+256">🇺🇬 أوغندا / Uganda +256</option>
+          <option value="+257">🇧🇮 بوروندي / Burundi +257</option>
+          <option value="+258">🇲🇿 موزمبيق / Mozambique +258</option>
+          <option value="+260">🇿🇲 زامبيا / Zambia +260</option>
+          <option value="+261">🇲🇬 مدغشقر / Madagascar +261</option>
+          <option value="+262">🇷🇪 ريونيون / Réunion +262</option>
+          <option value="+263">🇿🇼 زيمبابوي / Zimbabwe +263</option>
+          <option value="+264">🇳🇦 ناميبيا / Namibia +264</option>
+          <option value="+265">🇲🇼 ملاوي / Malawi +265</option>
+          <option value="+266">🇱🇸 ليسوتو / Lesotho +266</option>
+          <option value="+267">🇧🇼 بوتسوانا / Botswana +267</option>
+          <option value="+268">🇸🇿 إسواتيني / Eswatini +268</option>
+          <option value="+27">🇿🇦 جنوب أفريقيا / South Africa +27</option>
+          <option value="+290">🇸🇭 سانت هيلينا / Saint Helena +290</option>
+          <option value="+297">🇦🇼 أروبا / Aruba +297</option>
+          <option value="+298">🇫🇴 جزر فارو / Faroe Islands +298</option>
+          <option value="+299">🇬🇱 جرينلاند / Greenland +299</option>
+          <option value="+30">🇬🇷 اليونان / Greece +30</option>
+          <option value="+31">🇳🇱 هولندا / Netherlands +31</option>
+          <option value="+32">🇧🇪 بلجيكا / Belgium +32</option>
+          <option value="+33">🇫🇷 فرنسا / France +33</option>
+          <option value="+34">🇪🇸 إسبانيا / Spain +34</option>
+          <option value="+350">🇬🇮 جبل طارق / Gibraltar +350</option>
+          <option value="+351">🇵🇹 البرتغال / Portugal +351</option>
+          <option value="+352">🇱🇺 لوكسمبورغ / Luxembourg +352</option>
+          <option value="+353">🇮🇪 أيرلندا / Ireland +353</option>
+          <option value="+354">🇮🇸 آيسلندا / Iceland +354</option>
+          <option value="+355">🇦🇱 ألبانيا / Albania +355</option>
+          <option value="+356">🇲🇹 مالطا / Malta +356</option>
+          <option value="+357">🇨🇾 قبرص / Cyprus +357</option>
+          <option value="+358">🇫🇮 فنلندا / Finland +358</option>
+          <option value="+359">🇧🇬 بلغاريا / Bulgaria +359</option>
+          <option value="+36">🇭🇺 المجر / Hungary +36</option>
+          <option value="+370">🇱🇹 ليتوانيا / Lithuania +370</option>
+          <option value="+371">🇱🇻 لاتفيا / Latvia +371</option>
+          <option value="+372">🇪🇪 إستونيا / Estonia +372</option>
+          <option value="+373">🇲🇩 مولدوفا / Moldova +373</option>
+          <option value="+374">🇦🇲 أرمينيا / Armenia +374</option>
+          <option value="+375">🇧🇾 بيلاروسيا / Belarus +375</option>
+          <option value="+376">🇦🇩 أندورا / Andorra +376</option>
+          <option value="+377">🇲🇨 موناكو / Monaco +377</option>
+          <option value="+378">🇸🇲 سان مارينو / San Marino +378</option>
+          <option value="+380">🇺🇦 أوكرانيا / Ukraine +380</option>
+          <option value="+381">🇷🇸 صربيا / Serbia +381</option>
+          <option value="+382">🇲🇪 الجبل الأسود / Montenegro +382</option>
+          <option value="+385">🇭🇷 كرواتيا / Croatia +385</option>
+          <option value="+386">🇸🇮 سلوفينيا / Slovenia +386</option>
+          <option value="+387">🇧🇦 البوسنة والهرسك / Bosnia +387</option>
+          <option value="+389">🇲🇰 مقدونيا الشمالية / North Macedonia +389</option>
+          <option value="+39">🇮🇹 إيطاليا / Italy +39</option>
+          <option value="+40">🇷🇴 رومانيا / Romania +40</option>
+          <option value="+41">🇨🇭 سويسرا / Switzerland +41</option>
+          <option value="+420">🇨🇿 جمهورية التشيك / Czech Republic +420</option>
+          <option value="+421">🇸🇰 سلوفاكيا / Slovakia +421</option>
+          <option value="+423">🇱🇮 ليختنشتاين / Liechtenstein +423</option>
+          <option value="+43">🇦🇹 النمسا / Austria +43</option>
+          <option value="+44">🇬🇧 المملكة المتحدة / UK +44</option>
+          <option value="+45">🇩🇰 الدنمارك / Denmark +45</option>
+          <option value="+46">🇸🇪 السويد / Sweden +46</option>
+          <option value="+47">🇳🇴 النرويج / Norway +47</option>
+          <option value="+48">🇵🇱 بولندا / Poland +48</option>
+          <option value="+49">🇩🇪 ألمانيا / Germany +49</option>
+          <option value="+1">🇺🇸 الولايات المتحدة / USA +1</option>
+          <option value="+1">🇨🇦 كندا / Canada +1</option>
+          <option value="+52">🇲🇽 المكسيك / Mexico +52</option>
+          <option value="+54">🇦🇷 الأرجنتين / Argentina +54</option>
+          <option value="+55">🇧🇷 البرازيل / Brazil +55</option>
+          <option value="+56">🇨🇱 تشيلي / Chile +56</option>
+          <option value="+57">🇨🇴 كولومبيا / Colombia +57</option>
+          <option value="+58">🇻🇪 فنزويلا / Venezuela +58</option>
+          <option value="+591">🇧🇴 بوليفيا / Bolivia +591</option>
+          <option value="+593">🇪🇨 الإكوادور / Ecuador +593</option>
+          <option value="+594">🇬🇫 غويانا الفرنسية / French Guiana +594</option>
+          <option value="+595">🇵🇾 باراغواي / Paraguay +595</option>
+          <option value="+596">🇲🇶 مارتينيك / Martinique +596</option>
+          <option value="+597">🇸🇷 سورينام / Suriname +597</option>
+          <option value="+598">🇺🇾 الأوروغواي / Uruguay +598</option>
+          <option value="+599">🇧🇶 بونير / Bonaire +599</option>
+          <option value="+60">🇲🇾 ماليزيا / Malaysia +60</option>
+          <option value="+61">🇦🇺 أستراليا / Australia +61</option>
+          <option value="+62">🇮🇩 إندونيسيا / Indonesia +62</option>
+          <option value="+63">🇵🇭 الفلبين / Philippines +63</option>
+          <option value="+64">🇳🇿 نيوزيلندا / New Zealand +64</option>
+          <option value="+65">🇸🇬 سنغافورة / Singapore +65</option>
+          <option value="+66">🇹🇭 تايلاند / Thailand +66</option>
+          <option value="+81">🇯🇵 اليابان / Japan +81</option>
+          <option value="+82">🇰🇷 كوريا الجنوبية / South Korea +82</option>
+          <option value="+84">🇻🇳 فيتنام / Vietnam +84</option>
+          <option value="+86">🇨🇳 الصين / China +86</option>
+          <option value="+91">🇮🇳 الهند / India +91</option>
+          <option value="+92">🇵🇰 باكستان / Pakistan +92</option>
+          <option value="+93">🇦🇫 أفغانستان / Afghanistan +93</option>
+          <option value="+94">🇱🇰 سريلانكا / Sri Lanka +94</option>
+          <option value="+95">🇲🇲 ميانمار / Myanmar +95</option>
+          <option value="+98">🇮🇷 إيران / Iran +98</option>
+          <option value="+880">🇧🇩 بنغلاديش / Bangladesh +880</option>
+          <option value="+977">🇳🇵 نيبال / Nepal +977</option>
+          <option value="+994">🇦🇿 أذربيجان / Azerbaijan +994</option>
+          <option value="+995">🇬🇪 جورجيا / Georgia +995</option>
+          <option value="+996">🇰🇬 قيرغيزستان / Kyrgyzstan +996</option>
+          <option value="+998">🇺🇿 أوزبكستان / Uzbekistan +998</option>
         </select>
-        <input type="tel" name="phoneNumber" placeholder="📱 رقم الهاتف" required class="phone-number-input px-4 py-2 border rounded-l-none focus:outline-none focus:ring-0 focus:border-blue-500"/>
+        <input type="tel" name="phoneNumber" placeholder="📱 رقم الهاتف" required class="phone-number-input px-4 py-2 focus:outline-none focus:ring-0"/>
       </div>
       
       <!-- النوع -->
@@ -228,7 +389,40 @@
       
       <input type="text" name="city" placeholder="المدينة" class="w-full px-4 py-2 border rounded"/>
       <input type="text" name="parentPhone" placeholder="رقم ولي الأمر (اختياري)" class="w-full px-4 py-2 border rounded"/>
-      <input type="password" name="password" placeholder="كلمة المرور" required class="w-full px-4 py-2 border rounded"/>
+      
+      <!-- كلمة المرور مع إمكانية الإظهار/الإخفاء -->
+      <div class="relative password-field">
+        <input type="password" name="password" id="password" placeholder="كلمة المرور" required class="w-full px-4 py-2 pr-12 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        <button type="button" id="togglePassword" class="password-toggle-btn">
+          <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- تأكيد كلمة المرور -->
+      <div class="relative password-field">
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="تأكيد كلمة المرور" required class="w-full px-4 py-2 pr-12 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        <button type="button" id="toggleConfirmPassword" class="password-toggle-btn">
+          <svg id="eyeIconConfirm" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- رسالة تطابق كلمات المرور -->
+      <div id="passwordMatch" class="text-sm hidden"></div>
+      
+      <!-- موافقة على الشروط والأحكام -->
+      <div class="flex items-start space-x-3 space-x-reverse">
+        <input type="checkbox" name="terms" id="terms" required class="terms-checkbox">
+        <label for="terms" class="text-sm text-gray-700 leading-relaxed">
+          أوافق على <a href="#" class="text-blue-600 hover:underline font-medium">الشروط والأحكام</a> و 
+          <a href="#" class="text-blue-600 hover:underline font-medium">سياسة الخصوصية</a> الخاصة بمنصة نور النبوة
+        </label>
+      </div>
 
       <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800 transition">🎉 إنشاء الحساب</button>
     </form>
@@ -249,19 +443,46 @@
     const messageDiv = document.getElementById("message");
     const countryCodeSelect = document.querySelector('select[name="countryCode"]');
     const phoneNumberInput = document.querySelector('input[name="phoneNumber"]');
+    
+    // عناصر كلمات المرور
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
+    const passwordMatchDiv = document.getElementById('passwordMatch');
+    const termsCheckbox = document.getElementById('terms');
 
     // إضافة مستمع حدث لتغيير مفتاح الدولة
     countryCodeSelect.addEventListener('change', function() {
       if (this.value) {
+        // استخراج اسم الدولة من النص المحدد
+        const selectedOption = this.options[this.selectedIndex];
+        const countryText = selectedOption.text;
+        const countryName = countryText.split(' / ')[0]; // الحصول على الاسم العربي
+        
         // التركيز التلقائي على حقل رقم الهاتف
         phoneNumberInput.focus();
         
         // إضافة تأثير بصري لحقل رقم الهاتف
         phoneNumberInput.classList.add('ring-2', 'ring-blue-500', 'border-blue-500');
         
+        // إضافة تأثير بصري للحاوية
+        document.querySelector('.phone-input-container').classList.add('ring-2', 'ring-blue-500');
+        
         // إزالة التأثير بعد ثانيتين
         setTimeout(() => {
           phoneNumberInput.classList.remove('ring-2', 'ring-blue-500', 'border-blue-500');
+          document.querySelector('.phone-input-container').classList.remove('ring-2', 'ring-blue-500');
+        }, 2000);
+        
+        // إظهار رسالة تأكيد مع اسم الدولة
+        messageDiv.textContent = `✅ تم اختيار ${countryName} بنجاح`;
+        messageDiv.classList.remove('text-red-600', 'text-yellow-600');
+        messageDiv.classList.add('text-green-600');
+        
+        setTimeout(() => {
+          messageDiv.textContent = "";
+          messageDiv.classList.remove('text-green-600');
         }, 2000);
       }
     });
@@ -275,9 +496,28 @@
       if (this.value.length > 15) {
         this.value = this.value.slice(0, 15);
       }
+      
+      // إظهار رسالة توجيهية
+      if (this.value.length > 0 && !countryCodeSelect.value) {
+        messageDiv.textContent = "⚠️ يرجى اختيار مفتاح الدولة أولاً";
+        messageDiv.classList.remove('text-green-600', 'text-red-600');
+        messageDiv.classList.add('text-yellow-600');
+      } else if (this.value.length > 0 && countryCodeSelect.value) {
+        messageDiv.textContent = "";
+        messageDiv.classList.remove('text-yellow-600');
+      }
+      
+      // إضافة تأثير بصري عند الكتابة
+      if (this.value.length > 0) {
+        this.style.borderColor = '#10b981';
+        this.style.backgroundColor = '#f0fdf4';
+      } else {
+        this.style.borderColor = '';
+        this.style.backgroundColor = '';
+      }
     });
-
-    // إضافة تحقق من مفتاح الدولة عند محاولة الكتابة في رقم الهاتف
+    
+    // إضافة تأثير عند التركيز على حقل رقم الهاتف
     phoneNumberInput.addEventListener('focus', function() {
       if (!countryCodeSelect.value) {
         // إظهار تنبيه للمستخدم
@@ -293,11 +533,207 @@
         
         // التركيز على قائمة مفتاح الدولة
         countryCodeSelect.focus();
+      } else {
+        // إضافة تأثير بصري إيجابي
+        this.style.borderColor = '#3b82f6';
+        this.style.backgroundColor = '#eff6ff';
+      }
+    });
+    
+    // إضافة تأثير عند إزالة التركيز
+    phoneNumberInput.addEventListener('blur', function() {
+      if (this.value.length === 0) {
+        this.style.borderColor = '';
+        this.style.backgroundColor = '';
       }
     });
 
+    // إظهار/إخفاء كلمة المرور
+    togglePasswordBtn.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      // تغيير الأيقونة
+      const eyeIcon = document.getElementById('eyeIcon');
+      if (type === 'text') {
+        eyeIcon.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+        `;
+      } else {
+        eyeIcon.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        `;
+      }
+    });
+
+    // إظهار/إخفاء تأكيد كلمة المرور
+    toggleConfirmPasswordBtn.addEventListener('click', function() {
+      const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmPasswordInput.setAttribute('type', type);
+      
+      // تغيير الأيقونة
+      const eyeIconConfirm = document.getElementById('eyeIconConfirm');
+      if (type === 'text') {
+        eyeIconConfirm.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+        `;
+      } else {
+        eyeIconConfirm.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        `;
+      }
+    });
+
+    // التحقق من تطابق كلمات المرور
+    function checkPasswordMatch() {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      
+      if (confirmPassword.length > 0) {
+        if (password === confirmPassword) {
+          passwordMatchDiv.textContent = "✅ كلمات المرور متطابقة";
+          passwordMatchDiv.className = "text-sm text-green-600";
+          passwordMatchDiv.classList.remove('hidden');
+          return true;
+        } else {
+          passwordMatchDiv.textContent = "❌ كلمات المرور غير متطابقة";
+          passwordMatchDiv.className = "text-sm text-red-600";
+          passwordMatchDiv.classList.remove('hidden');
+          return false;
+        }
+      } else {
+        passwordMatchDiv.classList.add('hidden');
+        return true;
+      }
+    }
+
+    // التحقق من قوة كلمة المرور
+    function checkPasswordStrength(password) {
+      let strength = 0;
+      let feedback = [];
+      
+      if (password.length >= 8) {
+        strength += 1;
+      } else {
+        feedback.push("يجب أن تكون كلمة المرور 8 أحرف على الأقل");
+      }
+      
+      if (/[a-z]/.test(password)) {
+        strength += 1;
+      } else {
+        feedback.push("يجب أن تحتوي على حرف صغير");
+      }
+      
+      if (/[A-Z]/.test(password)) {
+        strength += 1;
+      } else {
+        feedback.push("يجب أن تحتوي على حرف كبير");
+      }
+      
+      if (/[0-9]/.test(password)) {
+        strength += 1;
+      } else {
+        feedback.push("يجب أن تحتوي على رقم");
+      }
+      
+      if (/[^A-Za-z0-9]/.test(password)) {
+        strength += 1;
+      } else {
+        feedback.push("يجب أن تحتوي على رمز خاص");
+      }
+      
+      return { strength, feedback };
+    }
+
+    // مراقبة تغييرات كلمات المرور
+    passwordInput.addEventListener('input', function() {
+      checkPasswordMatch();
+      
+      // إظهار قوة كلمة المرور
+      const password = this.value;
+      if (password.length > 0) {
+        const strengthCheck = checkPasswordStrength(password);
+        let strengthText = "";
+        let strengthColor = "";
+        
+        if (strengthCheck.strength <= 2) {
+          strengthText = "ضعيفة";
+          strengthColor = "text-red-600";
+        } else if (strengthCheck.strength <= 3) {
+          strengthText = "متوسطة";
+          strengthColor = "text-yellow-600";
+        } else if (strengthCheck.strength <= 4) {
+          strengthText = "جيدة";
+          strengthColor = "text-blue-600";
+        } else {
+          strengthText = "قوية";
+          strengthColor = "text-green-600";
+        }
+        
+        // إظهار قوة كلمة المرور
+        if (!document.getElementById('passwordStrength')) {
+          const strengthDiv = document.createElement('div');
+          strengthDiv.id = 'passwordStrength';
+          strengthDiv.className = `text-sm ${strengthColor} mt-1`;
+          passwordInput.parentNode.appendChild(strengthDiv);
+        }
+        
+        document.getElementById('passwordStrength').textContent = `قوة كلمة المرور: ${strengthText}`;
+        document.getElementById('passwordStrength').className = `text-sm ${strengthColor} mt-1`;
+      } else {
+        const strengthDiv = document.getElementById('passwordStrength');
+        if (strengthDiv) {
+          strengthDiv.remove();
+        }
+      }
+    });
+    
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      
+      console.log("Form submission started"); // للتأكد من أن الحدث يعمل
+
+      // التحقق من جميع الحقول المطلوبة
+      const fullname = form.querySelector('input[name="fullname"]').value.trim();
+      const email = form.querySelector('input[name="email"]').value.trim();
+      const gender = form.querySelector('select[name="gender"]').value;
+      const grade = form.querySelector('select[name="grade"]').value;
+
+      if (!fullname) {
+        messageDiv.textContent = "❌ يرجى إدخال الاسم الكامل";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        form.querySelector('input[name="fullname"]').focus();
+        return;
+      }
+
+      if (!email) {
+        messageDiv.textContent = "❌ يرجى إدخال البريد الإلكتروني";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        form.querySelector('input[name="email"]').focus();
+        return;
+      }
+
+      if (!gender) {
+        messageDiv.textContent = "❌ يرجى اختيار النوع";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        form.querySelector('select[name="gender"]').focus();
+        return;
+      }
+
+      if (!grade) {
+        messageDiv.textContent = "❌ يرجى اختيار المرحلة الدراسية";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        form.querySelector('select[name="grade"]').focus();
+        return;
+      }
 
       // التحقق من اختيار مفتاح الدولة
       if (!countryCodeSelect.value) {
@@ -317,15 +753,60 @@
         return;
       }
 
+      // التحقق من تطابق كلمات المرور
+      if (!checkPasswordMatch()) {
+        messageDiv.textContent = "❌ يرجى التأكد من تطابق كلمات المرور";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        return;
+      }
+
+      // التحقق من قوة كلمة المرور
+      const password = passwordInput.value;
+      const strengthCheck = checkPasswordStrength(password);
+      if (strengthCheck.strength < 3) {
+        messageDiv.textContent = "❌ كلمة المرور ضعيفة جداً. يرجى اختيار كلمة مرور أقوى";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        passwordInput.focus();
+        return;
+      }
+
+      // التحقق من موافقة الشروط والأحكام
+      if (!termsCheckbox.checked) {
+        messageDiv.textContent = "❌ يرجى الموافقة على الشروط والأحكام";
+        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.add('text-red-600');
+        termsCheckbox.focus();
+        return;
+      }
+
       // Disable the submit button to prevent multiple submissions
       const submitBtn = form.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.textContent = "جاري إنشاء الحساب...";
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      // إظهار رسالة التحميل
+      messageDiv.textContent = "⏳ جاري إنشاء الحساب، يرجى الانتظار...";
+      messageDiv.classList.remove('text-red-600', 'text-blue-600');
+      messageDiv.classList.add('text-blue-600');
 
       const formData = new FormData(form);
       const countryCode = formData.get("countryCode");
       const phoneNumber = formData.get("phoneNumber");
       const fullPhoneNumber = countryCode + phoneNumber;
+
+      console.log("Form data:", {
+        fullname: formData.get("fullname"),
+        email: formData.get("email"),
+        phone: fullPhoneNumber,
+        gender: formData.get("gender"),
+        grade: formData.get("grade"),
+        city: formData.get("city"),
+        parentPhone: formData.get("parentPhone"),
+        password: formData.get("password")
+      });
 
       const params = new URLSearchParams({
         action: "addStudent",
@@ -340,14 +821,19 @@
       });
 
       try {
+        console.log("Sending request to:", "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec?" + params.toString());
+        
         const res = await fetch(
           "https://script.google.com/macros/s/AKfycbzYsZh3bYhjznpFCxAqDUTeSggfJiegyCSw2sJPB_Cf1OTO7VnFSHeI7mPygd-QQ_wn/exec?" + params.toString(),
           { method: "POST" }
         );
+        
+        console.log("Response status:", res.status);
         const text = await res.text();
+        console.log("Response text:", text);
 
         messageDiv.textContent = "✅ " + text;
-        messageDiv.classList.remove('text-red-600', 'text-yellow-600');
+        messageDiv.classList.remove('text-red-600', 'text-blue-600');
         messageDiv.classList.add("text-green-600");
         form.reset();
 
@@ -356,13 +842,15 @@
           window.location.href = `login.html?next=${encodeURIComponent(redirectTo)}`;
         }, 1500);
       } catch (err) {
+        console.error("Error during form submission:", err);
         messageDiv.textContent = "❌ حدث خطأ أثناء الاتصال بالخادم.";
-        messageDiv.classList.remove('text-green-600', 'text-yellow-600');
+        messageDiv.classList.remove('text-green-600', 'text-blue-600');
         messageDiv.classList.add("text-red-600");
       } finally {
         // إعادة تفعيل الزر
         submitBtn.disabled = false;
         submitBtn.textContent = "🎉 إنشاء الحساب";
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       }
     });
 

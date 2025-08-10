@@ -11,14 +11,20 @@
     body, html {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
       font-family: 'Reem Kufi', 'Cairo', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      background: transparent;
     }
     .background {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
       z-index: -1;
+      pointer-events: none;
     }
     .background img {
       position: absolute;
@@ -32,14 +38,22 @@
       opacity: 1;
     }
     .center-content {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
       text-align: center;
+      background: transparent;
+      z-index: 1;
     }
     .whatsapp-banner {
       position: fixed;
-      bottom: 0; right: 0; left: 0;
+      bottom: 0; 
+      right: 0; 
+      left: 0;
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
       text-align: center;
@@ -49,6 +63,8 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
+      z-index: 100;
+      backdrop-filter: blur(10px);
     }
     .whatsapp-banner a {
       color: #25D366;
@@ -260,27 +276,37 @@
       background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
       color: white;
       font-family: 'Reem Kufi', sans-serif;
-      font-weight: 600;
-      font-size: 1.1rem;
-      padding: 1rem 2.5rem;
-      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.4rem;
+      padding: 1.5rem 3rem;
+      border-radius: 60px;
       border: none;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
       box-shadow: 
-        0 4px 15px rgba(251, 191, 36, 0.3),
-        0 8px 25px rgba(0,0,0,0.2);
+        0 8px 25px rgba(251, 191, 36, 0.4),
+        0 15px 35px rgba(0,0,0,0.3),
+        0 0 30px rgba(251, 191, 36, 0.3);
       position: relative;
       overflow: hidden;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      margin: 2rem 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      border: 3px solid rgba(255, 255, 255, 0.2);
     }
     
     .signup-btn:hover {
-      transform: translateY(-2px) scale(1.05);
+      transform: translateY(-5px) scale(1.08);
       box-shadow: 
-        0 6px 20px rgba(251, 191, 36, 0.4),
-        0 12px 35px rgba(0,0,0,0.3);
+        0 12px 35px rgba(251, 191, 36, 0.5),
+        0 20px 45px rgba(0,0,0,0.4),
+        0 0 40px rgba(251, 191, 36, 0.5);
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    }
+    
+    .signup-btn:active {
+      transform: translateY(-2px) scale(1.05);
     }
     
     .signup-btn::before {
@@ -292,13 +318,34 @@
       height: 100%;
       background: linear-gradient(90deg, 
         transparent 0%, 
-        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0.4) 50%, 
         transparent 100%);
-      transition: left 0.6s ease;
+      transition: left 0.8s ease;
     }
     
     .signup-btn:hover::before {
       left: 100%;
+    }
+    
+    .signup-btn::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        rgba(251, 191, 36, 0.5), 
+        rgba(245, 158, 11, 0.5), 
+        rgba(251, 191, 36, 0.5));
+      border-radius: 62px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    .signup-btn:hover::after {
+      opacity: 1;
     }
     
     /* إضافة الصورة في الجانب العلوي */
@@ -306,7 +353,7 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      z-index: 10;
+      z-index: 50;
       text-align: center;
     }
     
@@ -346,7 +393,7 @@
       top: 50%;
       left: 20px;
       transform: translateY(-50%);
-      z-index: 10;
+      z-index: 50;
       display: flex;
       flex-direction: column;
       gap: 15px;
@@ -445,7 +492,324 @@
       visibility: visible;
     }
     
+    /* أنماط قسم النبذة */
+    .about-section {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 800px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .about-section::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        rgba(255,255,255,0.1), 
+        rgba(255,255,255,0.3), 
+        rgba(255,255,255,0.1));
+      border-radius: 22px;
+      z-index: -1;
+      animation: borderPulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes borderPulse {
+      0%, 100% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+    
+    .about-title {
+      font-family: 'Reem Kufi', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+      position: relative;
+    }
+    
+    .about-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        #fbbf24 20%, 
+        #f59e0b 50%, 
+        #fbbf24 80%, 
+        transparent 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+    
+    .about-content {
+      font-family: 'Reem Kufi', sans-serif;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #ffffff;
+      text-align: justify;
+      text-align-last: center;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .about-highlight {
+      color: #fbbf24;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+    }
+    
+    .about-features {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #ffffff;
+      font-family: 'Reem Kufi', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    .feature-icon {
+      color: #fbbf24;
+      font-size: 1.2rem;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+    
+    /* أنماط قسم المميزات */
+    .features-section {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 900px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .features-section::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        rgba(255,255,255,0.1), 
+        rgba(255,255,255,0.3), 
+        rgba(255,255,255,0.1));
+      border-radius: 22px;
+      z-index: -1;
+      animation: borderPulse 3s ease-in-out infinite;
+    }
+    
+    .features-title {
+      font-family: 'Reem Kufi', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+      position: relative;
+    }
+    
+    .features-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        #fbbf24 20%, 
+        #f59e0b 50%, 
+        #fbbf24 80%, 
+        transparent 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.1) 50%, 
+        transparent 100%);
+      transition: left 0.6s ease;
+    }
+    
+    .feature-card:hover::before {
+      left: 100%;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border-color: rgba(251, 191, 36, 0.5);
+    }
+    
+    .feature-card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+      text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    
+    @keyframes iconFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    .feature-card-text {
+      font-family: 'Reem Kufi', sans-serif;
+      font-size: 1.1rem;
+      color: #ffffff;
+      line-height: 1.6;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* تحسينات التصميم المتجاوب */
     @media (max-width: 768px) {
+      .main-title {
+        font-size: 3.5rem;
+        padding: 15px;
+        letter-spacing: 2px;
+      }
+      
+      .sub-title {
+        font-size: 2.5rem;
+        padding: 15px;
+        letter-spacing: 1px;
+      }
+      
+      .signup-btn {
+        font-size: 1.2rem;
+        padding: 1.2rem 2.5rem;
+        margin: 1.5rem 0;
+        letter-spacing: 1.5px;
+      }
+      
+      .center-content {
+        padding: 1rem 0.5rem;
+      }
+      
+      .about-section {
+        margin: 1rem 0.5rem;
+        padding: 1.5rem 1rem;
+      }
+      
+      .about-title {
+        font-size: 1.8rem;
+      }
+      
+      .about-content {
+        font-size: 1rem;
+      }
+      
+      .about-features {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .features-section {
+        margin: 1rem 0.5rem;
+        padding: 1.5rem 1rem;
+      }
+      
+      .features-title {
+        font-size: 1.8rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .feature-card {
+        padding: 1.2rem;
+      }
+      
+      .feature-card-icon {
+        font-size: 2.5rem;
+      }
+      
+      .feature-card-text {
+        font-size: 1rem;
+      }
+      
+      .top-image {
+        top: 10px;
+        right: 10px;
+      }
+      
+      .top-image img {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .top-image .name {
+        font-size: 0.9rem;
+        padding: 3px 8px;
+      }
+      
       .social-media-banner {
         left: 10px;
       }
@@ -462,6 +826,40 @@
       
       .social-icon .tooltip {
         display: none;
+      }
+      
+      .whatsapp-banner {
+        padding: 0.8rem;
+        font-size: 0.8rem;
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-title {
+        font-size: 2.8rem;
+        padding: 12px;
+      }
+      
+      .sub-title {
+        font-size: 2rem;
+        padding: 12px;
+      }
+      
+      .signup-btn {
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
+        margin: 1rem 0;
+        letter-spacing: 1px;
+      }
+      
+      .about-title, .features-title {
+        font-size: 1.5rem;
+      }
+      
+      .about-content, .feature-card-text {
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -518,9 +916,63 @@
   <div class="center-content">
     <h1 class="main-title">منصة</h1>
     <h2 class="sub-title">نور النبوة</h2>
+    
     <button onclick="location.href='signup.html'" class="signup-btn">
       تسجيل
     </button>
+    
+    <!-- قسم النبذة -->
+    <div class="about-section">
+      <h3 class="about-title">✨ نبذة عن منصة نور النبوة</h3>
+      <p class="about-content">
+        منصة نور النبوة هي منصة متكاملة تهدف إلى نشر العلم الشرعي والمعرفة الصحيحة المستمدة من <span class="about-highlight">الكتاب والسنة</span>، بأسلوب مبسط يناسب جميع الأعمار والمستويات. توفر المنصة محتوى متميز من دروس، محاضرات، ومواد تعليمية تساعد على فهم الدين وتطبيقه في الحياة اليومية.
+      </p>
+      <div class="about-features">
+        <div class="feature-item">
+          <span class="feature-icon">📚</span>
+          <span>دروس ومحاضرات</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🎯</span>
+          <span>أسلوب مبسط</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🌟</span>
+          <span>محتوى متميز</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📖</span>
+          <span>الكتاب والسنة</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- قسم المميزات -->
+    <div class="features-section">
+      <h3 class="features-title">📌 مميزات منصة نور النبوة</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-card-icon">📖</span>
+          <div class="feature-card-text">محتوى علمي موثوق بإشراف نخبة من العلماء وطلبة العلم</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card-icon">🎥</span>
+          <div class="feature-card-text">دروس ومحاضرات مرئية وصوتية بجودة عالية</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card-icon">📱</span>
+          <div class="feature-card-text">واجهة سهلة الاستخدام على جميع الأجهزة</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card-icon">🕰</span>
+          <div class="feature-card-text">تحديثات مستمرة وإضافة محتوى جديد بانتظام</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card-icon">🌍</span>
+          <div class="feature-card-text">إتاحة الوصول من أي مكان وفي أي وقت</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- البنر السفلي -->
@@ -548,6 +1000,33 @@
         loader.style.opacity = '0';
         setTimeout(() => loader.style.display = 'none', 400);
       }
+    });
+    
+    // تحسين أداء الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+      // إضافة تأثيرات سلسة للعناصر
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+      
+      // مراقبة العناصر لإضافة تأثيرات
+      const animatedElements = document.querySelectorAll('.about-section, .features-section, .signup-btn');
+      animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
     });
   </script>
 
