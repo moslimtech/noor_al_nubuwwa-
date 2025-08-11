@@ -3,62 +3,50 @@
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/</loc>
-    <priority>1.00</priority>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/signup.html</loc>
-    <priority>0.90</priority>
   </url>
 
   <url>
-    <loc>https://moslimtech.github.io/noor_al_nubuwwa-/login.html?next=home.html</loc>
-    <priority>0.90</priority>
+    <loc>https://moslimtech.github.io/noor_al_nubuwwa-/login.html</loc>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/home.html</loc>
-    <priority>0.90</priority>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/sections.html</loc>
-    <priority>0.80</priority>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/topics.html</loc>
-    <priority>0.80</priority>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/courses.html</loc>
-    <priority>0.80</priority>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/lectures.html</loc>
-    <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://moslimtech.github.io/noor_al_nubuwwa-/videos.html?courseId=301&amp;lectureId=401</loc>
-    <priority>0.70</priority>
+    <loc>https://moslimtech.github.io/noor_al_nubuwwa-/videos.html</loc>
   </url>
 
   <url>
-    <loc>https://moslimtech.github.io/noor_al_nubuwwa-/quiz.html?courseId=301&amp;lectureId=401&amp;videoId=VID001</loc>
-    <priority>0.70</priority>
+    <loc>https://moslimtech.github.io/noor_al_nubuwwa-/quiz.html</loc>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/student.html</loc>
-    <priority>0.80</priority>
   </url>
 
   <url>
     <loc>https://moslimtech.github.io/noor_al_nubuwwa-/live-courses.html</loc>
-    <priority>0.80</priority>
   </url>
 
 </urlset>
